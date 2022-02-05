@@ -1,1 +1,2 @@
 export FLASK_APP=hashdiary
+export FLASK_ENV=development
