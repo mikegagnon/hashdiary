@@ -54,13 +54,20 @@
     </header>
 
 
-    <div id="content" contenteditable="true">
-      This is a test
-    </div>
+    <div id="hashdiary-content" contenteditable>
+      <!--<div id="hd-hashHtml" v-html="hashHtml"  ></div>->>
+
+      <!--<span class="hd-header-1"># This is a test</span><br><br>
+  
+      Te4st
+
+    </div>-->
   </div>
 </main>
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}" ></script>
+    <script src="{{ url_for('static', filename='js/vue.js')}}" ></script>
+    <script src="{{ url_for('static', filename='js/hashdiary.js')}}" ></script>
 
   </body>
 </html>

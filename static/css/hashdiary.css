@@ -6,3 +6,8 @@ body {
 [contenteditable] {
   outline: 0px solid transparent;
 }
+
+.hd-header-1 {
+    background-color: white;
+    color: #282922;
+}

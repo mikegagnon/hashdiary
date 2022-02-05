@@ -1,0 +1,212 @@
+const CONTENT = `# Header
+
+Test
+
+## Subheader
+
+Foo
+`;
+
+
+function htmlifyLine(line) {
+    if (line.startsWith("#")) {
+        return `<b>${line}</b>`
+    } else {
+        return line;
+    }
+
+}
+
+function htmlify(md) {
+    const lines = md.split(/\r?\n/);
+    const result = [];
+    for (const line of lines) {
+        //console.log(line)
+        result.push(htmlifyLine(line));
+    }
+
+    return result.join("<br>\n") + "<br>\n";
+
+}
+
+// const app = new Vue({
+//   el: '#hashdiary-app',
+//   data: {
+//     hashHtml: htmlify(CONTENT)
+//   },
+//   methods: {
+//     hashChange: function(event) {
+//         const content = document.getElementById("hd-hashHtml").textContent;
+//         console.log(content);
+//         this.hashHtml = htmlify(content);
+//     }
+//   }
+// })
+
+
+//https://javascript.plainenglish.io/how-to-find-the-caret-inside-a-contenteditable-element-955a5ad9bf81
+function getCaretIndex(element) {
+  let position = 0;
+  const isSupported = typeof window.getSelection !== "undefined";
+  if (isSupported) {
+    const selection = window.getSelection();
+    if (selection.rangeCount !== 0) {
+      const range = window.getSelection().getRangeAt(0);
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(element);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+      position = preCaretRange.toString().length;
+    }
+  }
+  return position;
+}
+
+//https://www.semicolonworld.com/question/69919/how-to-keep-the-position-of-the-caret-in-contenteditable-element
+/*function getCaretPos(element) {
+    var ie = (typeof document.selection != "undefined" && document.selection.type != "Control") && true;
+    var w3 = (typeof window.getSelection != "undefined") && true;
+    var caretOffset = 0;
+    if (w3) {
+        var range = window.getSelection().getRangeAt(0);
+        var preCaretRange = range.cloneRange();
+        preCaretRange.selectNodeContents(element);
+        preCaretRange.setEnd(range.endContainer, range.endOffset);
+        caretOffset = preCaretRange.toString().length;
+    } else if (ie) {
+        var textRange = document.selection.createRange();
+        var preCaretTextRange = document.body.createTextRange();
+        preCaretTextRange.moveToElementText(element);
+        preCaretTextRange.setEndPoint("EndToEnd", textRange);
+        caretOffset = preCaretTextRange.text.length;
+    }
+    return caretOffset;
+}
+
+//https://www.semicolonworld.com/question/69919/how-to-keep-the-position-of-the-caret-in-contenteditable-element
+function setCaretPos(element, position) {
+    var node = element;
+    node.focus();
+    var textNode = node.firstChild;
+    var caret = position; // insert caret after the 10th character say
+    var range = document.createRange();
+    range.setStart(textNode, caret);
+    range.setEnd(textNode, caret);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+}*/
+
+//https://stackoverflow.com/questions/5595956/replace-innerhtml-in-contenteditable-div
+function saveSelection(containerEl) {
+    var charIndex = 0, start = 0, end = 0, foundStart = false, stop = {};
+    var sel = rangy.getSelection(), range;
+
+    function traverseTextNodes(node, range) {
+        if (node.nodeType == 3) {
+            if (!foundStart && node == range.startContainer) {
+                start = charIndex + range.startOffset;
+                foundStart = true;
+            }
+            if (foundStart && node == range.endContainer) {
+                end = charIndex + range.endOffset;
+                throw stop;
+            }
+            charIndex += node.length;
+        } else {
+            for (var i = 0, len = node.childNodes.length; i < len; ++i) {
+                traverseTextNodes(node.childNodes[i], range);
+            }
+        }
+    }
+
+    if (sel.rangeCount) {
+        try {
+            traverseTextNodes(containerEl, sel.getRangeAt(0));
+        } catch (ex) {
+            if (ex != stop) {
+                throw ex;
+            }
+        }
+    }
+
+    return {
+        start: start,
+        end: end
+    };
+}
+
+// https://stackoverflow.com/questions/5595956/replace-innerhtml-in-contenteditable-div
+function restoreSelection(containerEl, savedSel) {
+    var charIndex = 0, range = rangy.createRange(), foundStart = false, stop = {};
+    range.collapseToPoint(containerEl, 0);
+
+    function traverseTextNodes(node) {
+        if (node.nodeType == 3) {
+            var nextCharIndex = charIndex + node.length;
+            if (!foundStart && savedSel.start >= charIndex && savedSel.start <= nextCharIndex) {
+                range.setStart(node, savedSel.start - charIndex);
+                foundStart = true;
+            }
+            if (foundStart && savedSel.end >= charIndex && savedSel.end <= nextCharIndex) {
+                range.setEnd(node, savedSel.end - charIndex);
+                throw stop;
+            }
+            charIndex = nextCharIndex;
+        } else {
+            for (var i = 0, len = node.childNodes.length; i < len; ++i) {
+                traverseTextNodes(node.childNodes[i]);
+            }
+        }
+    }
+
+    try {
+        traverseTextNodes(containerEl);
+    } catch (ex) {
+        if (ex == stop) {
+            rangy.getSelection().setSingleRange(range);
+        } else {
+            throw ex;
+        }
+    }
+}
+
+
+let CARET = undefined;
+
+document.getElementById("hashdiary-content").addEventListener("beforeinput", function() {
+
+    const el = document.getElementById('hashdiary-content');  
+// const selection = window.getSelection();  
+// const range = document.createRange(); 
+// console.log(selection, range)
+
+    CARET = getCaretPos(el);
+//    console.log("before", CARET);
+}, false);
+
+
+document.getElementById("hashdiary-content").addEventListener("input", function() {
+    //console.log(1);
+    //const caret = getCaretIndex(document.getElementById("hashdiary-content"));
+    //console.log(caret);
+
+    const el = document.getElementById('hashdiary-content');  
+
+    //CARET = getCaretPos(el);
+    //console.log("before", CARET);
+
+    var savedSel = saveSelection(el);
+
+
+    const content = document.getElementById("hashdiary-content").textContent;
+    const html = htmlify(content);
+    document.getElementById("hashdiary-content").innerHTML = html;
+
+    //setCaretPos(el, CARET);
+    restoreSelection(el, savedSel);
+    //console.log("after", CARET);
+
+    //document.getElementById("hashdiary-content").setSelectionRange(caret, caret);
+
+ 
+}, false);
