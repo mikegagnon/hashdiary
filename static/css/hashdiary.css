@@ -2,3 +2,7 @@ body {
     background-color: #282922;
     color: white;
 }
+
+[contenteditable] {
+  outline: 0px solid transparent;
+}
