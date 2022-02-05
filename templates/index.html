@@ -4,13 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hashdiary</title>
-
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/headers/">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png')}}">
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/hashdiary.css')}}" rel="stylesheet">
 
-      <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png')}}">
-
-    <!-- Bootstrap core CSS -->
-<link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
 
 <meta name="theme-color" content="#7952b3">
 
@@ -42,10 +40,9 @@
 
   <div class="container">
     <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
         <span class="fs-4">Hashdiary</span>
-      </a>
+      </div>
 
       <ul class="nav nav-pills">
         <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
