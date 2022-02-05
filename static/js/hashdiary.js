@@ -97,7 +97,7 @@ function setCaretPos(element, position) {
 }*/
 
 //https://stackoverflow.com/questions/5595956/replace-innerhtml-in-contenteditable-div
-function saveSelection(containerEl) {
+/*function saveSelection(containerEl) {
     var charIndex = 0, start = 0, end = 0, foundStart = false, stop = {};
     var sel = rangy.getSelection(), range;
 
@@ -169,8 +169,8 @@ function restoreSelection(containerEl, savedSel) {
         }
     }
 }
-
-
+*/
+/*
 let CARET = undefined;
 
 document.getElementById("hashdiary-content").addEventListener("beforeinput", function() {
@@ -183,7 +183,21 @@ document.getElementById("hashdiary-content").addEventListener("beforeinput", fun
     CARET = getCaretPos(el);
 //    console.log("before", CARET);
 }, false);
+*/
 
+function insertTextAtCaret(text) {
+    var sel, range;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode( document.createTextNode(text) );
+        }
+    } else if (document.selection && document.selection.createRange) {
+        document.selection.createRange().text = text;
+    }
+}
 
 document.getElementById("hashdiary-content").addEventListener("input", function() {
     //console.log(1);
@@ -192,21 +206,31 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     const el = document.getElementById('hashdiary-content');  
 
+    insertTextAtCaret("x")
+
     //CARET = getCaretPos(el);
     //console.log("before", CARET);
 
-    var savedSel = saveSelection(el);
+    //var savedSel = saveSelection(el);
 
 
     const content = document.getElementById("hashdiary-content").textContent;
     const html = htmlify(content);
+
     document.getElementById("hashdiary-content").innerHTML = html;
 
+
+
     //setCaretPos(el, CARET);
-    restoreSelection(el, savedSel);
+    //restoreSelection(el, savedSel);
     //console.log("after", CARET);
 
     //document.getElementById("hashdiary-content").setSelectionRange(caret, caret);
 
  
 }, false);
+
+document.onselectionchange = function() {
+    console.log("Selection changed!");
+};
+
