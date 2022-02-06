@@ -215,9 +215,9 @@ function insertSpanAtCaret(insertPara) {
             marker.classList.add("hd-marker")*/
         let prefix = "";
         if (insertPara) {
-            prefix = "\n";//<br>";
+            //prefix = "\n";//<br>";
         }
-        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}${prefix}</div>`)[0];
+        var marker = $(`<span class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}${prefix}</span>`)[0];
             MARKER_INDEX++;
 
     if (window.getSelection) {
@@ -249,6 +249,8 @@ function insertSpanAtCaret(insertPara) {
 }
 
 function htmlifyLine(line) {
+    line = line.replace(MARKER_KEY, `<span class='hd-marker'>baz</span>`);
+
     if (line.startsWith("#")) {
         return `<div><span class='hd-header-1-hash'>#</span><span class='hd-header-1'>${line.slice(1)}</span></div>`
     } else if (line == "") {
@@ -261,9 +263,9 @@ function htmlifyLine(line) {
 
 function htmlify(md) {
     //return md;
-    console.log(md)
+    //console.log(md)
     md = md.replaceAll("\n\n", "\n");
-    console.log(md)
+    //console.log(md)
     const lines = md.split("\n");
     const result = [];
 
@@ -279,10 +281,50 @@ function htmlify(md) {
 }
 
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+
+
+    insertSpanAtCaret();
+
     const element = document.getElementById('hashdiary-content');  
     const innerText = element.innerText;
     const html = htmlify(innerText);
     element.innerHTML = html;
+
+
+    const range = document.createRange();
+
+    let span = $(".hd-marker")[0];
+    console.log(span)
+
+        // document.createRange() creates new range object
+var rangeobj = document.createRange();
+
+// Here 'rangeobj' is created Range Object
+var selectobj = window.getSelection();
+
+// Here 'selectobj' is created object for window
+// get selected or caret current position.
+// Setting start position of a Range
+rangeobj.setStart(span, 0);
+
+// Setting End position of a Range
+rangeobj.setEnd(span, 0);
+
+// Collapses the Range to one of its
+// boundary points
+rangeobj.collapse(true);
+
+// Removes all ranges from the selection
+// except Anchor Node and Focus Node
+selectobj.removeAllRanges();
+
+// Adds a Range to a Selection
+selectobj.addRange(rangeobj);
+
+    $(".hd-marker").remove();
+
+ 
+
     event.preventDefault();
 }, false);
 
@@ -346,6 +388,8 @@ document.getElementById("hashdiary-content").addEventListener("input-old", funct
     });
 
     console.log(span);
+
+
 
     //range.setStart(span, 0);
 
