@@ -185,17 +185,40 @@ document.getElementById("hashdiary-content").addEventListener("beforeinput", fun
 }, false);
 */
 
-function insertTextAtCaret(text) {
+let MARKER_INDEX = 0;
+
+function insertSpanAtCaret(text) {
     var sel, range;
+         /*var marker = document.createElement('span');
+            marker.innerHTML ="x";
+            //marker.style.display = "none";
+            marker.setAttribute('data-index', MARKER_INDEX);
+            marker.classList.add("hd-marker")*/
+
+        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>foobar</div>`)[0];
+            MARKER_INDEX++;
     if (window.getSelection) {
         sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
             range = sel.getRangeAt(0);
             range.deleteContents();
-            range.insertNode( document.createTextNode(text) );
+
+       
+            //alert(1)
+            range.insertNode( marker );
+            console.log(marker)
+            console.log(1);
+        } else {
+            //range.insertNode( marker );
+            alert(1);
         }
     } else if (document.selection && document.selection.createRange) {
-        document.selection.createRange().text = text;
+
+
+        const range = document.selection.createRange();
+        range.insertNode(marker)
+        console.log(2);
+        //document.selection.createRange().text = text;
     }
 }
 
@@ -206,7 +229,7 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     const el = document.getElementById('hashdiary-content');  
 
-    insertTextAtCaret("x")
+    insertSpanAtCaret("x")
 
     //CARET = getCaretPos(el);
     //console.log("before", CARET);
@@ -219,6 +242,36 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     document.getElementById("hashdiary-content").innerHTML = html;
 
+    const range = document.createRange();
+
+    //https://stackoverflow.com/questions/27076931/how-to-find-the-highest-data-attribute-with-js-jquery-and-append-a-div-to-it
+    // const num = $(".hd-marker").map(function(){ return $(this).data("index"); });
+
+    // //const highest = Math.max(-1, num);//find the highest value from them
+    // const span = $(".hd-marker").filter(function(){
+    //     return $(this).data('index') == highest;//return the highest div
+    // }).get();
+
+    //console.log(highest)
+
+    let highestNum = -1;
+    let span = undefined;
+
+    $(".hd-marker").each(function(){
+        var num = +this.getAttribute("data-index") ;
+        if (num > highestNum)  {
+            highestNum = num;
+        }
+        console.log(this)
+    }).each(function(){
+        if (highestNum === +this.getAttribute("data-index")) {
+            span = this;
+        }
+    });
+
+    console.log(span);
+
+    range.setStart(span, 0);
 
 
     //setCaretPos(el, CARET);
