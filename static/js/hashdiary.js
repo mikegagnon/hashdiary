@@ -1,3 +1,6 @@
+const MARKER_KEY = "7604267189873861976155784891535363898234203909339143050075566922885063";
+let MARKER_INDEX = 0;
+
 const CONTENT = `# Header
 
 Test
@@ -9,6 +12,9 @@ Foo
 
 
 function htmlifyLine(line) {
+    line = line.replace(MARKER_KEY, `<b class='hd-marker' data-index='${MARKER_INDEX}'>baz</b>`);
+    MARKER_INDEX += 1
+
     if (line.startsWith("#")) {
         return `<b>${line}</b>`
     } else {
@@ -185,7 +191,6 @@ document.getElementById("hashdiary-content").addEventListener("beforeinput", fun
 }, false);
 */
 
-let MARKER_INDEX = 0;
 
 function insertSpanAtCaret(text) {
     var sel, range;
@@ -195,7 +200,7 @@ function insertSpanAtCaret(text) {
             marker.setAttribute('data-index', MARKER_INDEX);
             marker.classList.add("hd-marker")*/
 
-        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>foobar</div>`)[0];
+        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}</div>`)[0];
             MARKER_INDEX++;
     if (window.getSelection) {
         sel = window.getSelection();
@@ -262,7 +267,7 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
         if (num > highestNum)  {
             highestNum = num;
         }
-        console.log(this)
+        console.log(this, "asdfsadf")
     }).each(function(){
         if (highestNum === +this.getAttribute("data-index")) {
             span = this;
@@ -271,7 +276,7 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     console.log(span);
 
-    range.setStart(span, 0);
+    //range.setStart(span, 0);
 
 
     //setCaretPos(el, CARET);
@@ -279,6 +284,37 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     //console.log("after", CARET);
 
     //document.getElementById("hashdiary-content").setSelectionRange(caret, caret);
+
+
+
+
+
+    // document.createRange() creates new range object
+var rangeobj = document.createRange();
+
+// Here 'rangeobj' is created Range Object
+var selectobj = window.getSelection();
+
+// Here 'selectobj' is created object for window
+// get selected or caret current position.
+// Setting start position of a Range
+rangeobj.setStart(span, 0);
+
+// Setting End position of a Range
+rangeobj.setEnd(span, 0);
+
+// Collapses the Range to one of its
+// boundary points
+rangeobj.collapse(true);
+
+// Removes all ranges from the selection
+// except Anchor Node and Focus Node
+selectobj.removeAllRanges();
+
+// Adds a Range to a Selection
+selectobj.addRange(rangeobj);
+
+    $(".hd-marker").remove();
 
  
 }, false);
