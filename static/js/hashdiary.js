@@ -24,7 +24,7 @@ function htmlifyText(line) {
 }
 
 function htmlify(contents) {
-    console.log(contents)
+    console.log("contents", contents)
     const newHtml = contents.map(function(){
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
@@ -33,7 +33,8 @@ function htmlify(contents) {
         } else if (this.nodeName == "BR") {
             return "<br>"
         } else if (this.nodeName == "DIV") {
-            console.log("todo")
+            const h = htmlify($(this).contents());
+            return `<div>${h}</div>`
         } else {
             console.error("unhandled", this.nodeName)
         }
@@ -63,17 +64,17 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     const unwrapped = $("#hashdiary-content").html();
     console.log("unwrapped", unwrapped)
 
-    let newHtml = undefined;
-    newHtml = htmlify($("#hashdiary-content").contents());
+    let newHtml = htmlify($("#hashdiary-content").contents());
     console.log("newHtml", newHtml)
     $("#hashdiary-content").html(newHtml);
+
     /*if ($("#hashdiary-content").children().length > 0) {
         newHtml = htmlifyDivs($("#hashdiary-content"));    
     } else {
         newHtml = htmlifyNoDivs($("#hashdiary-content"));
     }*/
 
-    console.log("new", newHtml);
+    //console.log("new", newHtml);
 
     event.preventDefault();
 }, false);
