@@ -1,7 +1,8 @@
 const MARKER_KEY = "7604267184203909339143050075566922885063";
 
 function insertMarkerAtCaret() {
-    const marker = $(`<span class='hd-marker'>${MARKER_KEY}</span>`)[0];
+    //const marker = $(`<span class='hd-marker'>${MARKER_KEY}</span>`)[0];
+    const marker = document.createTextNode(MARKER_KEY);
     const sel = window.getSelection();
     const range = sel.getRangeAt(0);
     range.deleteContents();
@@ -46,7 +47,32 @@ function htmlify(contents) {
 function removeMarker() {
     const range = document.createRange();
 
-    let span = $(".hd-marker")[0];
+    /*$('#hashdiary-content').find(":not(iframe)").each(function() {
+        //alert(1)
+        console.log("v", this.outerHTML);
+        //$(v).contents().filter(function() { return this.nodeType === 3; }).wrap('<span class="new"/>')
+    })*/
+
+    //http://jsfiddle.net/5vfBg/
+    /*$('#hashdiary-content').find(':not(iframe)').addBack().contents().each(function(){
+        //console.log("x", this);
+        // console.log("xx", $(this).html());
+        // var currentHTML = $(this).get()[0].outerHTML;
+        // var newHTML = currentHTML.replace(MARKER_KEY, "sf");
+        // $(this).html(newHTML);
+        var text = $(this).text()
+        text = text.replace(MARKER_KEY, "foo")
+        $(this).html(text)
+    });*/
+
+    let html = $("#hashdiary-content").html();
+    html = html.replace(MARKER_KEY, "<span class='hd-marker'>baz</span>")
+    $("#hashdiary-content").html(html);
+    console.log(html)
+
+    const span = $(".hd-marker")[0];
+
+    //let span = $(".hd-marker")[0];
     console.log(span)
 
     // document.createRange() creates new range object
