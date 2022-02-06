@@ -1,5 +1,13 @@
+const MARKER_KEY = "7604267184203909339143050075566922885063";
 
-
+function insertMarkerAtCaret() {
+    const marker = $(`<span class='hd-marker'>${MARKER_KEY}</span>`)[0];
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(marker);
+    return;
+}
 
 function htmlifyText(line) {
     let result = undefined;
@@ -24,6 +32,8 @@ function htmlify(contents) {
         } else if (this.nodeName == "DIV") {
             const h = htmlify($(this).contents());
             return `<div>${h}</div>`
+        } else if ($(this).hasClass("hd-marker")) {
+            return this.outerHTML;
         } else {
             console.error("unhandled", this.nodeName)
         }
@@ -33,7 +43,45 @@ function htmlify(contents) {
 }
 
 
+function removeMarker() {
+    const range = document.createRange();
+
+    let span = $(".hd-marker")[0];
+    console.log(span)
+
+    // document.createRange() creates new range object
+    var rangeobj = document.createRange();
+
+    // Here 'rangeobj' is created Range Object
+    var selectobj = window.getSelection();
+
+    // Here 'selectobj' is created object for window
+    // get selected or caret current position.
+    // Setting start position of a Range
+    rangeobj.setStart(span, 0);
+
+    // Setting End position of a Range
+    rangeobj.setEnd(span, 0);
+
+    // Collapses the Range to one of its
+    // boundary points
+    rangeobj.collapse(true);
+
+    // Removes all ranges from the selection
+    // except Anchor Node and Focus Node
+    selectobj.removeAllRanges();
+
+    // Adds a Range to a Selection
+    selectobj.addRange(rangeobj);
+
+    $(".hd-marker").remove();
+
+}
+
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+
+    insertMarkerAtCaret();
+
     const oldHtml = $("#hashdiary-content").html();
     console.log("old", oldHtml)
 
@@ -47,6 +95,10 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     let newHtml = htmlify($("#hashdiary-content").contents());
     console.log("newHtml", newHtml)
     $("#hashdiary-content").html(newHtml);
+
+
+
+    removeMarker();
 
 
     event.preventDefault();
