@@ -8,6 +8,12 @@ body {
 }
 
 .hd-header-1 {
-    background-color: white;
-    color: #282922;
+    /*background-color: white;
+    color: #282922;*/
+    font-weight: bold;
+}
+
+.hd-header-1-hash {
+    color: #ff0071;
+    font-weight: bold;
 }

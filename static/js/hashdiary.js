@@ -1,6 +1,8 @@
 const MARKER_KEY = "7604267189873861976155784891535363898234203909339143050075566922885063";
 let MARKER_INDEX = 0;
 
+
+
 const CONTENT = `# Header
 
 Test
@@ -12,11 +14,13 @@ Foo
 
 
 function htmlifyLine(line) {
-    line = line.replace(MARKER_KEY, `<b class='hd-marker' data-index='${MARKER_INDEX}'>baz</b>`);
+    console.log(1 +  line)
+    line = line.replace(MARKER_KEY, `<span class='hd-marker' data-index='${MARKER_INDEX}'>baz</span>`);
     MARKER_INDEX += 1
+    console.log(2 + line)
 
     if (line.startsWith("#")) {
-        return `<b>${line}</b>`
+        return `<span class='hd-header-1-hash'>#</span><span class='hd-header-1'>${line.slice(1)}</span>`
     } else {
         return line;
     }
