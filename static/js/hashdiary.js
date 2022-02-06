@@ -35,7 +35,7 @@ function htmlify(md) {
         result.push(htmlifyLine(line));
     }
 
-    return result.join("<br>\n") + "<br>\n";
+    return result.join("\n");// + "\n";
 
 }
 
@@ -196,7 +196,7 @@ document.getElementById("hashdiary-content").addEventListener("beforeinput", fun
 */
 
 
-function insertSpanAtCaret(text) {
+function insertSpanAtCaret(insertPara) {
     var sel, range;
          /*var marker = document.createElement('span');
             marker.innerHTML ="x";
@@ -217,6 +217,7 @@ function insertSpanAtCaret(text) {
             range.insertNode( marker );
             console.log(marker)
             console.log(1);
+            return
         } else {
             //range.insertNode( marker );
             alert(1);
@@ -226,19 +227,23 @@ function insertSpanAtCaret(text) {
 
         const range = document.selection.createRange();
         range.insertNode(marker)
-        console.log(2);
+        //console.log(2);
+        alert(2)
         //document.selection.createRange().text = text;
     }
+    alert(3)
 }
 
-document.getElementById("hashdiary-content").addEventListener("input", function() {
+document.getElementById("hashdiary-content").addEventListener("input", function(event) {
     //console.log(1);
     //const caret = getCaretIndex(document.getElementById("hashdiary-content"));
     //console.log(caret);
 
     const el = document.getElementById('hashdiary-content');  
+    const insertPara = event.inputType == "insertParagraph";
 
-    insertSpanAtCaret("x")
+    insertSpanAtCaret(insertPara)
+
 
     //CARET = getCaretPos(el);
     //console.log("before", CARET);
@@ -247,7 +252,10 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
 
     const content = document.getElementById("hashdiary-content").textContent;
-    const html = htmlify(content);
+    let html = htmlify(content);
+    console.log("content", content);
+    console.log("html", html);
+    //html = html.replace("\n", "<br>")
 
     document.getElementById("hashdiary-content").innerHTML = html;
 
@@ -293,6 +301,45 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
 
 
+
+    //console.log("target", event);
+/*
+
+ if ((event.which == 13 || event.which == 10)) {
+ var docFragment = document.createDocumentFragment();
+
+ //add a new line
+ var newEle = document.createTextNode('\n');
+docFragment.appendChild(newEle);
+
+ //add the br, or p, or something else
+ newEle = document.createElement('br');
+docFragment.appendChild(newEle);
+
+ //make the br replace selection
+ var range = window.getSelection().getRangeAt(0);
+range.deleteContents();
+range.insertNode(docFragment);
+
+ //create a new range
+ range = document.createRange();
+range.setStartAfter(newEle);
+range.collapse(true);
+
+ //make the cursor there
+ var sel = window.getSelection();
+sel.removeAllRanges();
+sel.addRange(range);
+
+ return false;
+}*/
+
+
+
+
+
+
+
     // document.createRange() creates new range object
 var rangeobj = document.createRange();
 
@@ -327,3 +374,49 @@ document.onselectionchange = function() {
     console.log("Selection changed!");
 };
 
+/*
+$('div[contenteditable]').keydown(function(e) {
+    // trap the return key being pressed
+    if (e.keyCode === 13) {
+        // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
+        document.execCommand('insertHTML', false, '<br><br>');
+        // prevent the default behaviour of return key pressed
+        // alert(1)
+        return false;
+    }
+});*/
+
+
+
+//https://helperbyte.com/questions/409333/how-to-add-a-br-line-break-in-a-contenteditable-div-on-ctrlenter
+// $('div[contenteditable]').keypress(function(event) {
+
+//  if ((event.which == 13 || event.which == 10)) {
+//  var docFragment = document.createDocumentFragment();
+
+//  //add a new line
+//  var newEle = document.createTextNode('\n');
+// docFragment.appendChild(newEle);
+
+//  //add the br, or p, or something else
+//  newEle = document.createElement('br');
+// docFragment.appendChild(newEle);
+
+//  //make the br replace selection
+//  var range = window.getSelection().getRangeAt(0);
+// range.deleteContents();
+// range.insertNode(docFragment);
+
+//  //create a new range
+//  range = document.createRange();
+// range.setStartAfter(newEle);
+// range.collapse(true);
+
+//  //make the cursor there
+//  var sel = window.getSelection();
+// sel.removeAllRanges();
+// sel.addRange(range);
+
+//  return false;
+// }
+// });
