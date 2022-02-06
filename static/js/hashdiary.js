@@ -296,30 +296,30 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     let span = $(".hd-marker")[0];
     console.log(span)
 
-        // document.createRange() creates new range object
-var rangeobj = document.createRange();
+    // document.createRange() creates new range object
+    var rangeobj = document.createRange();
 
-// Here 'rangeobj' is created Range Object
-var selectobj = window.getSelection();
+    // Here 'rangeobj' is created Range Object
+    var selectobj = window.getSelection();
 
-// Here 'selectobj' is created object for window
-// get selected or caret current position.
-// Setting start position of a Range
-rangeobj.setStart(span, 0);
+    // Here 'selectobj' is created object for window
+    // get selected or caret current position.
+    // Setting start position of a Range
+    rangeobj.setStart(span, 0);
 
-// Setting End position of a Range
-rangeobj.setEnd(span, 0);
+    // Setting End position of a Range
+    rangeobj.setEnd(span, 0);
 
-// Collapses the Range to one of its
-// boundary points
-rangeobj.collapse(true);
+    // Collapses the Range to one of its
+    // boundary points
+    rangeobj.collapse(true);
 
-// Removes all ranges from the selection
-// except Anchor Node and Focus Node
-selectobj.removeAllRanges();
+    // Removes all ranges from the selection
+    // except Anchor Node and Focus Node
+    selectobj.removeAllRanges();
 
-// Adds a Range to a Selection
-selectobj.addRange(rangeobj);
+    // Adds a Range to a Selection
+    selectobj.addRange(rangeobj);
 
     $(".hd-marker").remove();
 
@@ -328,201 +328,7 @@ selectobj.addRange(rangeobj);
     event.preventDefault();
 }, false);
 
-document.getElementById("hashdiary-content").addEventListener("input-old", function(event) {
-    return;
-    //console.log(1);
-    //const caret = getCaretIndex(document.getElementById("hashdiary-content"));
-    //console.log(caret);
 
-    const el = document.getElementById('hashdiary-content');  
-    const insertPara = event.inputType == "insertParagraph";
-    insertSpanAtCaret(insertPara)
-
-
-    //CARET = getCaretPos(el);
-    //console.log("before", CARET);
-
-    //var savedSel = saveSelection(el);
-
-
-    const content = document.getElementById("hashdiary-content").textContent;
-    let html = htmlify(content);
-    console.log("content", "'" + content +"'");
-
-
-    /*if (html[html.length - 1] == "\n") {
-        html += "<br>"
-    }*/
-
-    //html = html.replace("\n", "<br>")
-    console.log("html", "'" + html + "'");
-
-    document.getElementById("hashdiary-content").innerHTML = html;
-    //return;
-
-    const range = document.createRange();
-
-    //https://stackoverflow.com/questions/27076931/how-to-find-the-highest-data-attribute-with-js-jquery-and-append-a-div-to-it
-    // const num = $(".hd-marker").map(function(){ return $(this).data("index"); });
-
-    // //const highest = Math.max(-1, num);//find the highest value from them
-    // const span = $(".hd-marker").filter(function(){
-    //     return $(this).data('index') == highest;//return the highest div
-    // }).get();
-
-    //console.log(highest)
-
-    let highestNum = -1;
-    let span = undefined;
-
-    $(".hd-marker").each(function(){
-        var num = +this.getAttribute("data-index") ;
-        if (num > highestNum)  {
-            highestNum = num;
-        }
-        console.log(this, "asdfsadf")
-    }).each(function(){
-        if (highestNum === +this.getAttribute("data-index")) {
-            span = this;
-        }
-    });
-
-    console.log(span);
-
-
-
-    //range.setStart(span, 0);
-
-
-    //setCaretPos(el, CARET);
-    //restoreSelection(el, savedSel);
-    //console.log("after", CARET);
-
-    //document.getElementById("hashdiary-content").setSelectionRange(caret, caret);
-
-
-
-
-
-
-    //console.log("target", event);
-/*
-
- if ((event.which == 13 || event.which == 10)) {
- var docFragment = document.createDocumentFragment();
-
- //add a new line
- var newEle = document.createTextNode('\n');
-docFragment.appendChild(newEle);
-
- //add the br, or p, or something else
- newEle = document.createElement('br');
-docFragment.appendChild(newEle);
-
- //make the br replace selection
- var range = window.getSelection().getRangeAt(0);
-range.deleteContents();
-range.insertNode(docFragment);
-
- //create a new range
- range = document.createRange();
-range.setStartAfter(newEle);
-range.collapse(true);
-
- //make the cursor there
- var sel = window.getSelection();
-sel.removeAllRanges();
-sel.addRange(range);
-
- return false;
-}*/
-
-
-
-
-
-
-
-    // document.createRange() creates new range object
-var rangeobj = document.createRange();
-
-// Here 'rangeobj' is created Range Object
-var selectobj = window.getSelection();
-
-// Here 'selectobj' is created object for window
-// get selected or caret current position.
-// Setting start position of a Range
-rangeobj.setStart(span, 0);
-
-// Setting End position of a Range
-rangeobj.setEnd(span, 0);
-
-// Collapses the Range to one of its
-// boundary points
-rangeobj.collapse(true);
-
-// Removes all ranges from the selection
-// except Anchor Node and Focus Node
-selectobj.removeAllRanges();
-
-// Adds a Range to a Selection
-selectobj.addRange(rangeobj);
-
-    $(".hd-marker").remove();
-
- 
-}, false);
-
-document.onselectionchange = function() {
-    console.log("Selection changed!");
-};
-
-/*
-$('div[contenteditable]').keydown(function(e) {
-    // trap the return key being pressed
-    if (e.keyCode === 13) {
-        // insert 2 br tags (if only one br tag is inserted the cursor won't go to the next line)
-        document.execCommand('insertHTML', false, '<br><br>');
-        // prevent the default behaviour of return key pressed
-        // alert(1)
-        return false;
-    }
-});*/
-
-
-
-//https://helperbyte.com/questions/409333/how-to-add-a-br-line-break-in-a-contenteditable-div-on-ctrlenter
-// $('div[contenteditable]').keypress(function(event) {
-
-//  if ((event.which == 13 || event.which == 10)) {
-//  var docFragment = document.createDocumentFragment();
-
-//  //add a new line
-//  var newEle = document.createTextNode('\n');
-// docFragment.appendChild(newEle);
-
-//  //add the br, or p, or something else
-//  newEle = document.createElement('br');
-// docFragment.appendChild(newEle);
-
-//  //make the br replace selection
-//  var range = window.getSelection().getRangeAt(0);
-// range.deleteContents();
-// range.insertNode(docFragment);
-
-//  //create a new range
-//  range = document.createRange();
-// range.setStartAfter(newEle);
-// range.collapse(true);
-
-//  //make the cursor there
-//  var sel = window.getSelection();
-// sel.removeAllRanges();
-// sel.addRange(range);
-
-//  return false;
-// }
-// });
 
 var div = document.getElementById('hashdiary-content');
 setTimeout(function() {

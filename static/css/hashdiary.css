@@ -1,6 +1,13 @@
 body {
     background-color: #282922;
     color: white;
+
+}
+
+.hashdiary-container {
+    font-family: "Garamond";
+    white-space: pre-line;
+    font-size: 14pt;
 }
 
 [contenteditable] {
@@ -11,9 +18,12 @@ body {
     /*background-color: white;
     color: #282922;*/
     font-weight: bold;
+    font-family: "Helvetica";
+
 }
 
 .hd-header-1-hash {
     color: #ff0071;
     font-weight: bold;
+    font-family: "Helvetica";
 }
