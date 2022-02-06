@@ -203,9 +203,13 @@ function insertSpanAtCaret(insertPara) {
             //marker.style.display = "none";
             marker.setAttribute('data-index', MARKER_INDEX);
             marker.classList.add("hd-marker")*/
-
-        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}</div>`)[0];
+        let prefix = "";
+        if (insertPara) {
+            prefix = "\n";
+        }
+        var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}${prefix}</div>`)[0];
             MARKER_INDEX++;
+
     if (window.getSelection) {
         sel = window.getSelection();
         if (sel.getRangeAt && sel.rangeCount) {
