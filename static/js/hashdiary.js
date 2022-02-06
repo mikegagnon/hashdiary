@@ -56,8 +56,8 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     //$("#hashdiary-content").find(".hd-markup").contents().unwrap();
     
     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
-    $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();;
-
+    $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
+    $("#hashdiary-content")[0].normalize();
 
     //$("#hashdiary-content").contents().unwrap(".hd-markup");
 
