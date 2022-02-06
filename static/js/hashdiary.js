@@ -280,7 +280,26 @@ function htmlify(md) {
 
 }
 
+
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+
+    let prevHtml = document.getElementById('hashdiary-content').innerHTML;
+    if ($("#hashdiary-content > div").length == 0) {
+        const newHtml = `<div>${prevHtml}</div>`
+        $("#hashdiary-content").html(newHtml);
+    }
+    /*const prevHtml = $("#hashdiary-content > div").map(function(){
+        console.log("x", this);
+    })*/
+    const newHtml = $("#hashdiary-content > div").map(function(){
+        //console.log("x", "'" + this.textContent + "'");
+        return htmlifyLine(this.textContent);
+    }).get().join("");
+    //console.log(newHtml);
+    $("#hashdiary-content").html(newHtml);
+}, false);
+
+document.getElementById("hashdiary-content").addEventListener("input-old", function(event) {
 
 
     insertSpanAtCaret();
