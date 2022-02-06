@@ -12,7 +12,12 @@ function insertMarkerAtCaret() {
 
 function htmlifyText(line) {
     let result = undefined;
-    if (line.startsWith("#")) {
+
+
+    if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("#")) {
+        const markerRemoved = line.replace(MARKER_KEY, "");
+        result = `${MARKER_KEY}<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${markerRemoved.slice(1)}</span>`
+    } else if (line.startsWith("#")) {
         result = `<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`
     } else {
         result = line;
