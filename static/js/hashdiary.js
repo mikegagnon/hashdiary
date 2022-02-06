@@ -1,16 +1,5 @@
 
-function htmlifyDivs(element) {
-    const newHtml = $("#hashdiary-content").children().map(function(){
-        return this.outerHTML;
-    }).get().join("");
 
-    return newHtml;
-
-}
-
-function htmlifyNoDivs(element) {
-    return "1"
-}
 
 function htmlifyText(line) {
     let result = undefined;
@@ -38,8 +27,6 @@ function htmlify(contents) {
         } else {
             console.error("unhandled", this.nodeName)
         }
-        //console.log("this", this)
-        //return "x"
     }).get().join("");
 
     return newHtml;
@@ -50,16 +37,9 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     const oldHtml = $("#hashdiary-content").html();
     console.log("old", oldHtml)
 
-
-    //x = $.parseHTML(oldHtml).find(".hd-markup").contents().unwrap();
-    //console.log("asf", x)
-    //$("#hashdiary-content").find(".hd-markup").contents().unwrap();
-    
     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
     $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
     $("#hashdiary-content")[0].normalize();
-
-    //$("#hashdiary-content").contents().unwrap(".hd-markup");
 
     const unwrapped = $("#hashdiary-content").html();
     console.log("unwrapped", unwrapped)
@@ -68,13 +48,6 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     console.log("newHtml", newHtml)
     $("#hashdiary-content").html(newHtml);
 
-    /*if ($("#hashdiary-content").children().length > 0) {
-        newHtml = htmlifyDivs($("#hashdiary-content"));    
-    } else {
-        newHtml = htmlifyNoDivs($("#hashdiary-content"));
-    }*/
-
-    //console.log("new", newHtml);
 
     event.preventDefault();
 }, false);
