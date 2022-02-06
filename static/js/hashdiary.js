@@ -248,7 +248,7 @@ function insertSpanAtCaret(insertPara) {
     alert(3)
 }
 
-function htmlifyLine(line) {
+function htmlifyLineOld2(line) {
     line = line.replace(MARKER_KEY, `<span class='hd-marker'>baz</span>`);
 
     if (line.startsWith("#")) {
@@ -261,6 +261,27 @@ function htmlifyLine(line) {
 
 }
 
+function htmlifyLine(lineFresh, wrapDiv) {
+    let line = lineFresh.replace(MARKER_KEY, `<span class='hd-marker'>baz</span>`);
+
+    let result = undefined;
+
+    if (line.startsWith("#")) {
+        result = `<span class='hd-header-1-hash'>#</span><span class='hd-header-1'>${line.slice(1)}</span>`
+    } else if (line == "") {
+        result = `<br>`
+    } else {
+        result = line;
+    }
+
+    if (wrapDiv) {
+        result = `<div>${result}</div>`;
+    }
+
+    return result;
+
+}
+
 function htmlify(md) {
     //return md;
     //console.log(md)
@@ -270,7 +291,7 @@ function htmlify(md) {
     const result = [];
 
     for (const line of lines) {
-        let x = htmlifyLine(line);
+        let x = htmlifyLine(line, true);
         result.push(x);
     }
 
@@ -282,21 +303,87 @@ function htmlify(md) {
 
 
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+    //return;
+    insertSpanAtCaret();
 
-    let prevHtml = document.getElementById('hashdiary-content').innerHTML;
+    /*let prevHtml = document.getElementById('hashdiary-content').innerHTML;
     if ($("#hashdiary-content > div").length == 0) {
         const newHtml = `<div>${prevHtml}</div>`
+        console.log("newHtml", "'" + newHtml + "'");
         $("#hashdiary-content").html(newHtml);
-    }
+    }*/
     /*const prevHtml = $("#hashdiary-content > div").map(function(){
         console.log("x", this);
     })*/
-    const newHtml = $("#hashdiary-content > div").map(function(){
-        //console.log("x", "'" + this.textContent + "'");
-        return htmlifyLine(this.textContent);
-    }).get().join("");
-    //console.log(newHtml);
-    $("#hashdiary-content").html(newHtml);
+
+    if ($("#hashdiary-content > div").length == 0) {
+        /*const newHtml = $("#hashdiary-content > div").map(function(){
+            console.log("x", "'" + this.textContent + "'");
+            return htmlifyLine(this.textContent);
+        }).get().join("");
+        console.log("newHtml", newHtml);
+        $("#hashdiary-content").html(newHtml);*/
+        //$("#hashdiary-content").html(1);
+        const html = $("#hashdiary-content").html();
+        console.log("z", html)
+        const htmlified = htmlifyLine(html, false);
+        $("#hashdiary-content").html(htmlified);
+    } else {
+        console.log("oldHtml", $("#hashdiary-content").html());
+        const newHtml = $("#hashdiary-content").children().map(function(){
+            console.log("child", "'" + this.outerHTML + "'");
+            if (this.nodeName == "DIV") {
+                return htmlifyLine(this.textContent, true);   
+            } else if (this.nodeName == "BR") {
+                return "<br>"
+            } else {
+                console.log("err", this.outerHTML.nodeName);
+            }
+        }).get().join("");
+        console.log("newHtml", newHtml);
+        $("#hashdiary-content").html(newHtml);
+    }
+    //return;
+
+    //return;
+
+
+
+    const range = document.createRange();
+
+    let span = $(".hd-marker")[0];
+    console.log(span)
+
+    // document.createRange() creates new range object
+    var rangeobj = document.createRange();
+
+    // Here 'rangeobj' is created Range Object
+    var selectobj = window.getSelection();
+
+    // Here 'selectobj' is created object for window
+    // get selected or caret current position.
+    // Setting start position of a Range
+    rangeobj.setStart(span, 0);
+
+    // Setting End position of a Range
+    rangeobj.setEnd(span, 0);
+
+    // Collapses the Range to one of its
+    // boundary points
+    rangeobj.collapse(true);
+
+    // Removes all ranges from the selection
+    // except Anchor Node and Focus Node
+    selectobj.removeAllRanges();
+
+    // Adds a Range to a Selection
+    selectobj.addRange(rangeobj);
+
+    $(".hd-marker").remove();
+
+ 
+
+    event.preventDefault();
 }, false);
 
 document.getElementById("hashdiary-content").addEventListener("input-old", function(event) {
