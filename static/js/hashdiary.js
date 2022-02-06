@@ -27,7 +27,7 @@ function htmlifyText(line) {
 }
 
 function htmlify(contents) {
-    console.log("contents", contents)
+    //console.log("contents", contents)
     const newHtml = contents.map(function(){
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
@@ -41,44 +41,48 @@ function htmlify(contents) {
         } else if ($(this).hasClass("hd-marker")) {
             return this.outerHTML;
         } else {
-            console.error("unhandled", this.nodeName)
+            console.error("unhandled", this.nodeName, this)
         }
     }).get().join("");
 
     return newHtml;
 }
 
+function toTextMd(contents) {
+    const textmd = contents.map(function(){
+        if (this.nodeName == "#text") {
+            //return htmlifyText(this.textContents)
+            return this.nodeValue
+            //console.log("'" + this.nodeValue + "'")
+        } else if (this.nodeName == "BR") {
+            return ""
+        } else if (this.nodeName == "DIV") {
+            const h = toTextMd($(this).contents());
+            return `${h}\n`
+        } else if ($(this).hasClass("hd-marker")) {
+            return ""
+        } else {
+            console.error("unhandled", this.nodeName)
+        }
+    }).get().join("");
+
+    return textmd.replace(MARKER_KEY, "");
+}
+
 
 function removeMarker() {
     const range = document.createRange();
 
-    /*$('#hashdiary-content').find(":not(iframe)").each(function() {
-        //alert(1)
-        console.log("v", this.outerHTML);
-        //$(v).contents().filter(function() { return this.nodeType === 3; }).wrap('<span class="new"/>')
-    })*/
-
-    //http://jsfiddle.net/5vfBg/
-    /*$('#hashdiary-content').find(':not(iframe)').addBack().contents().each(function(){
-        //console.log("x", this);
-        // console.log("xx", $(this).html());
-        // var currentHTML = $(this).get()[0].outerHTML;
-        // var newHTML = currentHTML.replace(MARKER_KEY, "sf");
-        // $(this).html(newHTML);
-        var text = $(this).text()
-        text = text.replace(MARKER_KEY, "foo")
-        $(this).html(text)
-    });*/
 
     let html = $("#hashdiary-content").html();
     html = html.replace(MARKER_KEY, "<span class='hd-marker'>baz</span>")
     $("#hashdiary-content").html(html);
-    console.log(html)
+    //console.log(html)
 
     const span = $(".hd-marker")[0];
 
     //let span = $(".hd-marker")[0];
-    console.log(span)
+    //console.log(span)
 
     // document.createRange() creates new range object
     var rangeobj = document.createRange();
@@ -114,17 +118,21 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     insertMarkerAtCaret();
 
     const oldHtml = $("#hashdiary-content").html();
-    console.log("old", oldHtml)
+    //console.log("old", oldHtml)
 
     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
     $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
+    $("#hashdiary-content span:empty").remove();
+
     $("#hashdiary-content")[0].normalize();
 
     const unwrapped = $("#hashdiary-content").html();
-    console.log("unwrapped", unwrapped)
+    //console.log("unwrapped", unwrapped)
 
     let newHtml = htmlify($("#hashdiary-content").contents());
-    console.log("newHtml", newHtml)
+    const textmd = toTextMd($("#hashdiary-content").contents());
+    console.log("textmd", textmd);
+
     $("#hashdiary-content").html(newHtml);
 
 
