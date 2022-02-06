@@ -1,4 +1,4 @@
-const MARKER_KEY = "7604267189873861976155784891535363898234203909339143050075566922885063";
+const MARKER_KEY = "7604267184203909339143050075566922885063";
 let MARKER_INDEX = 0;
 
 
@@ -13,7 +13,7 @@ Foo
 `;
 
 
-function htmlifyLine(line) {
+function htmlifyLineOld(line) {
     console.log(1 +  line)
     line = line.replace(MARKER_KEY, `<span class='hd-marker' data-index='${MARKER_INDEX}'>baz</span>`);
     MARKER_INDEX += 1
@@ -27,15 +27,25 @@ function htmlifyLine(line) {
 
 }
 
-function htmlify(md) {
+function htmlifyOld(md) {
     const lines = md.split(/\r?\n/);
     const result = [];
     for (const line of lines) {
         //console.log(line)
-        result.push(htmlifyLine(line));
+        let x = htmlifyLine(line);
+        const rmed = x.replace(/\s+/g, '')
+        if (rmed.length > 0) {
+            x = `<div>${x}</div>`;
+        } else {
+            x = "<div></div>";// "NEWLINE";//"<br>"
+        }
+        result.push(x);
     }
 
-    return result.join("\n");// + "\n";
+    //const joined = result.join("\n");// + "\n";
+    const joined = result.join("");// + "\n";
+
+    return joined.replace("NEWLINE", "\n")
 
 }
 
@@ -205,7 +215,7 @@ function insertSpanAtCaret(insertPara) {
             marker.classList.add("hd-marker")*/
         let prefix = "";
         if (insertPara) {
-            prefix = "\n";
+            prefix = "\n";//<br>";
         }
         var marker = $(`<div class='hd-marker' data-index='${MARKER_INDEX}'>${MARKER_KEY}${prefix}</div>`)[0];
             MARKER_INDEX++;
@@ -238,14 +248,52 @@ function insertSpanAtCaret(insertPara) {
     alert(3)
 }
 
+function htmlifyLine(line) {
+    if (line.startsWith("#")) {
+        return `<div><span class='hd-header-1-hash'>#</span><span class='hd-header-1'>${line.slice(1)}</span></div>`
+    } else if (line == "") {
+        return `<div><br></div>`
+    } else {
+        return `<div>${line}</div>`;
+    }
+
+}
+
+function htmlify(md) {
+    //return md;
+    console.log(md)
+    md = md.replaceAll("\n\n", "\n");
+    console.log(md)
+    const lines = md.split("\n");
+    const result = [];
+
+    for (const line of lines) {
+        let x = htmlifyLine(line);
+        result.push(x);
+    }
+
+    const joined = result.join("");
+    console.log(joined)
+    return joined;
+
+}
+
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+    const element = document.getElementById('hashdiary-content');  
+    const innerText = element.innerText;
+    const html = htmlify(innerText);
+    element.innerHTML = html;
+    event.preventDefault();
+}, false);
+
+document.getElementById("hashdiary-content").addEventListener("input-old", function(event) {
+    return;
     //console.log(1);
     //const caret = getCaretIndex(document.getElementById("hashdiary-content"));
     //console.log(caret);
 
     const el = document.getElementById('hashdiary-content');  
     const insertPara = event.inputType == "insertParagraph";
-
     insertSpanAtCaret(insertPara)
 
 
@@ -257,11 +305,18 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     const content = document.getElementById("hashdiary-content").textContent;
     let html = htmlify(content);
-    console.log("content", content);
-    console.log("html", html);
+    console.log("content", "'" + content +"'");
+
+
+    /*if (html[html.length - 1] == "\n") {
+        html += "<br>"
+    }*/
+
     //html = html.replace("\n", "<br>")
+    console.log("html", "'" + html + "'");
 
     document.getElementById("hashdiary-content").innerHTML = html;
+    //return;
 
     const range = document.createRange();
 
@@ -424,3 +479,9 @@ $('div[contenteditable]').keydown(function(e) {
 //  return false;
 // }
 // });
+
+var div = document.getElementById('hashdiary-content');
+setTimeout(function() {
+    div.focus();
+    //div.innerHTML = "\n";
+}, 0);
