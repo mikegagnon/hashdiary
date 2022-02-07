@@ -37,17 +37,22 @@ function htmlifyText(line) {
     return result;
 }
 
-function htmlify(contents) {
+function htmlify(contents, recur = false) {
     //console.log("contents", contents)
     const newHtml = contents.map(function(){
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
-            return htmlifyText(this.nodeValue)
+            const x = htmlifyText(this.nodeValue)
+            if (recur) {
+                return x;
+            } else {
+                return `<div>${x}</div>`;
+            }
             //console.log("'" + this.nodeValue + "'")
         } else if (this.nodeName == "BR") {
             return "<br>"
         } else if (this.nodeName == "DIV") {
-            const h = htmlify($(this).contents());
+            const h = htmlify($(this).contents(), true);
             return `<div>${h}</div>`
         } else if ($(this).hasClass("hd-marker")) {
             return this.outerHTML;
