@@ -37,12 +37,21 @@ function htmlifyText(line) {
     return result;
 }
 
-function htmlify(contents, recur = false) {
+const BR_KEY = "875320567353920586756"
+const END_DIV_KEY = "9090473623729304874"
+
+function htmlify(contents, recur = false, markdown = null) {
+    if (markdown == null) {
+        markdown = [""]
+    }
+
     //console.log("contents", contents)
     const newHtml = contents.map(function(){
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
             const x = htmlifyText(this.nodeValue)
+            markdown[0] += this.nodeValue;
+
             if (recur) {
                 return x;
             } else {
@@ -50,9 +59,12 @@ function htmlify(contents, recur = false) {
             }
             //console.log("'" + this.nodeValue + "'")
         } else if (this.nodeName == "BR") {
+            //console.error("asdf");
+            markdown[0] += BR_KEY
             return "<br>"
         } else if (this.nodeName == "DIV") {
-            const h = htmlify($(this).contents(), true);
+            const h = htmlify($(this).contents(), true, markdown);
+            markdown[0] += END_DIV_KEY
             return `<div>${h}</div>`
         } else if ($(this).hasClass("hd-marker")) {
             return this.outerHTML;
@@ -60,6 +72,18 @@ function htmlify(contents, recur = false) {
             console.error("unhandled", this.nodeName, this)
         }
     }).get().join("");
+
+    if (!recur){
+        console.log("markdown")
+        let md = markdown[0].replace(MARKER_KEY, "")
+        md = md.replaceAll(BR_KEY + END_DIV_KEY, "\n");
+        md = md.replaceAll(BR_KEY, "\n");
+        md = md.replaceAll(END_DIV_KEY, "\n");
+
+        console.log(md);
+        console.log("end markdown")
+        
+    }
 
     return newHtml;
 }
@@ -195,11 +219,11 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     const newHtml = htmlify($("#hashdiary-content").contents());
     console.log("newHtml", "'" + newHtml + "'");
 
-    const textmd = toTextMd($("#hashdiary-content").contents());
-    console.log("textmd", "'" + textmd + "'");
+    //const textmd = toTextMd($("#hashdiary-content").contents());
+    //console.log("textmd", "'" + textmd + "'");
 
-    const htmlmd = htmlFromTextMd(textmd);
-    console.log("htmlmd", "'" + htmlmd + "'");
+    //const htmlmd = htmlFromTextMd(textmd);
+    //console.log("htmlmd", "'" + htmlmd + "'");
 
 
     //$("#hashdiary-content").html(htmlmd);
