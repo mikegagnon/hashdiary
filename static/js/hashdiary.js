@@ -206,69 +206,23 @@ function renderHtml(divId) {
 
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
     
-    // setTimeout(function(){
-    //     insertMarkerAtCaret(event.inputType == "insertParagraph");
-
-    //     const oldHtml = $("#hashdiary-content").html();
-    //     //console.log("old", oldHtml)
-
-    //     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
-    //     $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
-    //     $("#hashdiary-content span:empty").remove();
-    //     $("#hashdiary-content")[0].normalize();
-
-    //     const unwrapped = $("#hashdiary-content").html();
-    //     //console.log("unwrapped", unwrapped)
-
-    //     const newHtml = htmlify($("#hashdiary-content").contents());
-    //     console.log("newHtml", "'" + newHtml + "'");
-
-    //     const textmd = toTextMd($("#hashdiary-content").contents());
-    //     console.log("textmd", "'" + textmd + "'");
-
-    //     const htmlmd = htmlFromTextMd(textmd);
-    //     console.log("htmlmd", "'" + htmlmd + "'");
-
-
-    //     //$("#hashdiary-content").html(htmlmd);
-    //     $("#hashdiary-content").html(newHtml);
-
-
-
-    //     removeMarker();
-
-
-    // }, 1000);
 
     insertMarkerAtCaret(event.inputType == "insertParagraph");
 
- 
+    // Do the real render
     const markdown = renderHtml("#hashdiary-content");
-    //const markdown2 = renderHtml("")
 
+    removeMarker();
 
-
-
+    // Do an invidible render, just so we can check the invisible markdown matches
+    // the visible markdown
     const htmlFromMd = htmlFromMarkdown(markdown)
     $("#hashdiary-scratchpad").html(htmlFromMd)
-
     const markdownScratch = renderHtml("#hashdiary-scratchpad");
-
     if (markdown != markdownScratch) {
         console.error("Markdown does not match")
     }
 
-    
-
-
-    //if ()
-
-
-    //$("#hashdiary-content").html(htmlFromMarkdown(markdown));
-
-
-
-    removeMarker();
 
 
     event.preventDefault();
