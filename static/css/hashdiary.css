@@ -27,3 +27,31 @@ body {
     font-weight: bold;
     font-family: "Helvetica";
 }
+
+.hd-header-2 {
+    /*background-color: white;
+    color: #282922;*/
+    /*font-weight: bold;*/
+    font-family: "Helvetica";
+}
+
+.hd-header-2-hash {
+    color: #ff9100;
+    font-weight: bold;
+    font-family: "Helvetica";
+}
+
+
+.hd-header-3 {
+    /*background-color: white;
+    color: #282922;*/
+    /*font-weight: bold;*/
+    font-family: "Helvetica";
+}
+
+.hd-header-3-hash {
+    color: #ff9100;
+    font-weight: bold;
+    font-family: "Helvetica";
+}
+

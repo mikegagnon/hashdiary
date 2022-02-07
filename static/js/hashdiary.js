@@ -1,7 +1,7 @@
 const MARKER_KEY = "7604267184203909339143050075566922885063";
 
 function insertMarkerAtCaret(insertPara) {
-    console.log(insertPara)
+    //console.log(insertPara)
     //const marker = $(`<span class='hd-marker'>${MARKER_KEY}</span>`)[0];
     const marker = document.createTextNode(MARKER_KEY);
     const sel = window.getSelection();
@@ -23,11 +23,19 @@ function htmlifyText(line) {
     let result = undefined;
 
 
-    if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("#")) {
+    if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("###")) {
+        const markerRemoved = line.replace(MARKER_KEY, "");
+        result = `${MARKER_KEY}<span class='hd-header-3-hash hd-markup'>###</span><span class='hd-header-3 hd-markup'>${markerRemoved.slice(3)}</span>`
+    } else if (line.startsWith("###")) {
+        result = `<span class='hd-header-3-hash hd-markup'>###</span><span class='hd-header-3 hd-markup'>${line.slice(3)}</span>`
+    } else if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("##")) {
+        const markerRemoved = line.replace(MARKER_KEY, "");
+        result = `${MARKER_KEY}<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-2 hd-markup'>${markerRemoved.slice(2)}</span>`
+    } else if (line.startsWith("##")) {
+        result = `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-2 hd-markup'>${line.slice(2)}</span>`
+    } else if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("#")) {
         const markerRemoved = line.replace(MARKER_KEY, "");
         result = `${MARKER_KEY}<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${markerRemoved.slice(1)}</span>`
-    //} else if (line.startsWith(MARKER_KEY)) {
-    //    result = 
     } else if (line.startsWith("#")) {
         result = `<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`
     } else {
