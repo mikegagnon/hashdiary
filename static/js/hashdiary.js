@@ -19,6 +19,13 @@ function insertMarkerAtCaret(insertPara) {
     return;
 }
 
+BOLD_REGEX = /\*\*(.+?)\*\*/g
+
+function stylizeText(line) {
+    line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>**</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>**</span>")
+    return line
+}
+
 function htmlifyText(line) {
     let result = undefined;
 
@@ -39,7 +46,7 @@ function htmlifyText(line) {
     } else if (line.startsWith("#")) {
         result = `<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`
     } else {
-        result = line;
+        result = stylizeText(line);
     }
     
     return result;
