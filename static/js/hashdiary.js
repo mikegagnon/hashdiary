@@ -29,6 +29,7 @@ function stylizeText(line) {
 function htmlifyText(line) {
     let result = undefined;
 
+    line = escapeHtml(line);
 
     if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("###")) {
         const markerRemoved = line.replace(MARKER_KEY, "");
@@ -70,6 +71,32 @@ function htmlFromMarkdown(markdown) {
 
     return html;
 }
+
+// https://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery/1395954#1395954
+function decodeEntities(encodedString) {
+  var textArea = document.createElement('textarea');
+  textArea.innerHTML = encodedString;
+  return textArea.value;
+}
+
+// https://stackoverflow.com/questions/24816/escaping-html-strings-with-jquery
+var entityMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;'
+};
+
+function escapeHtml (string) {
+  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+    return entityMap[s];
+  });
+}
+
 
 function htmlify(contents, recur = false, markdown = null) {
     if (markdown == null) {
@@ -211,8 +238,10 @@ function renderHtml(divId) {
 
  
     const [newHtml, markdown] = htmlify($(divId).contents());
-    //console.log("newHtml", "'" + newHtml + "'");
-    //console.log("markdown", "'" + markdown + "'");
+
+
+    console.log("newHtml", "'" + newHtml + "'");
+    console.log("markdown", "'" + markdown + "'");
     //console.log("htmlFromMarkdown", "'" + htmlFromMarkdown(markdown) + "'");
  
     $(`${divId}`).html(newHtml);
