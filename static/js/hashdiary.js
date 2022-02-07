@@ -40,6 +40,10 @@ function htmlifyText(line) {
 const BR_KEY = "875320567353920586756"
 const END_DIV_KEY = "9090473623729304874"
 
+/*function htmlFromMarkdown(markdown) {
+
+}*/
+
 function htmlify(contents, recur = false, markdown = null) {
     if (markdown == null) {
         markdown = [""]
@@ -74,18 +78,23 @@ function htmlify(contents, recur = false, markdown = null) {
     }).get().join("");
 
     if (!recur){
-        console.log("markdown")
+        // console.log("markdown")
         let md = markdown[0].replace(MARKER_KEY, "")
         md = md.replaceAll(BR_KEY + END_DIV_KEY, "\n");
         md = md.replaceAll(BR_KEY, "\n");
         md = md.replaceAll(END_DIV_KEY, "\n");
+        if (md[md.length - 1] == "\n") {
+            md = md.slice(0, -1);
+        }
 
-        console.log(md);
-        console.log("end markdown")
-        
+        // console.log(md);
+        // console.log("end markdown")
+        return [newHtml, md]
+    } else {
+        return newHtml;
     }
 
-    return newHtml;
+
 }
 
 function toTextMd(contents) {
@@ -216,8 +225,9 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     const unwrapped = $("#hashdiary-content").html();
     //console.log("unwrapped", unwrapped)
 
-    const newHtml = htmlify($("#hashdiary-content").contents());
+    const [newHtml, markdown] = htmlify($("#hashdiary-content").contents());
     console.log("newHtml", "'" + newHtml + "'");
+    console.log("markdown", "'" + markdown + "'");
 
     //const textmd = toTextMd($("#hashdiary-content").contents());
     //console.log("textmd", "'" + textmd + "'");
