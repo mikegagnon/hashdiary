@@ -206,15 +206,12 @@ function renderHtml(divId) {
 
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
     
-
-    insertMarkerAtCaret(event.inputType == "insertParagraph");
-
     // Do the real render
+    insertMarkerAtCaret(event.inputType == "insertParagraph");
     const markdown = renderHtml("#hashdiary-content");
-
     removeMarker();
 
-    // Do an invidible render, just so we can check the invisible markdown matches
+    // Do an invisible render, just so we can check the invisible markdown matches
     // the visible markdown
     const htmlFromMd = htmlFromMarkdown(markdown)
     $("#hashdiary-scratchpad").html(htmlFromMd)
@@ -222,8 +219,6 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     if (markdown != markdownScratch) {
         console.error("Markdown does not match")
     }
-
-
 
     event.preventDefault();
 }, false);
