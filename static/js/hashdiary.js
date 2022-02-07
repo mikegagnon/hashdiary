@@ -1,11 +1,20 @@
 const MARKER_KEY = "7604267184203909339143050075566922885063";
 
-function insertMarkerAtCaret() {
+function insertMarkerAtCaret(insertPara) {
+    console.log(insertPara)
     //const marker = $(`<span class='hd-marker'>${MARKER_KEY}</span>`)[0];
     const marker = document.createTextNode(MARKER_KEY);
     const sel = window.getSelection();
+    /*let i = undefined;
+    if (insertPara) {
+        i = 1;
+    } else {
+        i = 0;
+    }*/
     const range = sel.getRangeAt(0);
-    range.deleteContents();
+
+
+    //range.deleteContents();
     range.insertNode(marker);
     return;
 }
@@ -17,6 +26,8 @@ function htmlifyText(line) {
     if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("#")) {
         const markerRemoved = line.replace(MARKER_KEY, "");
         result = `${MARKER_KEY}<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${markerRemoved.slice(1)}</span>`
+    //} else if (line.startsWith(MARKER_KEY)) {
+    //    result = 
     } else if (line.startsWith("#")) {
         result = `<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`
     } else {
@@ -69,6 +80,20 @@ function toTextMd(contents) {
     return textmd.replace(MARKER_KEY, "");
 }
 
+function htmlFromTextMd(textmd) {
+    lines = textmd.split("\n");
+    const html = [];
+
+    const trimmed = lines.filter
+    for (line of lines) {
+        // if (line == "") {
+        //     continue;
+        // }
+        const hline = `<div>${line}<br></div>`
+        html.push(hline);
+    }
+    return html.join("");
+}
 
 function removeMarker() {
     const range = document.createRange();
@@ -114,8 +139,42 @@ function removeMarker() {
 }
 
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
+    
+    // setTimeout(function(){
+    //     insertMarkerAtCaret(event.inputType == "insertParagraph");
 
-    insertMarkerAtCaret();
+    //     const oldHtml = $("#hashdiary-content").html();
+    //     //console.log("old", oldHtml)
+
+    //     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
+    //     $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
+    //     $("#hashdiary-content span:empty").remove();
+    //     $("#hashdiary-content")[0].normalize();
+
+    //     const unwrapped = $("#hashdiary-content").html();
+    //     //console.log("unwrapped", unwrapped)
+
+    //     const newHtml = htmlify($("#hashdiary-content").contents());
+    //     console.log("newHtml", "'" + newHtml + "'");
+
+    //     const textmd = toTextMd($("#hashdiary-content").contents());
+    //     console.log("textmd", "'" + textmd + "'");
+
+    //     const htmlmd = htmlFromTextMd(textmd);
+    //     console.log("htmlmd", "'" + htmlmd + "'");
+
+
+    //     //$("#hashdiary-content").html(htmlmd);
+    //     $("#hashdiary-content").html(newHtml);
+
+
+
+    //     removeMarker();
+
+
+    // }, 1000);
+
+    insertMarkerAtCaret(event.inputType == "insertParagraph");
 
     const oldHtml = $("#hashdiary-content").html();
     //console.log("old", oldHtml)
@@ -123,16 +182,22 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
     $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
     $("#hashdiary-content span:empty").remove();
-
     $("#hashdiary-content")[0].normalize();
 
     const unwrapped = $("#hashdiary-content").html();
     //console.log("unwrapped", unwrapped)
 
-    let newHtml = htmlify($("#hashdiary-content").contents());
-    const textmd = toTextMd($("#hashdiary-content").contents());
-    console.log("textmd", textmd);
+    const newHtml = htmlify($("#hashdiary-content").contents());
+    console.log("newHtml", "'" + newHtml + "'");
 
+    const textmd = toTextMd($("#hashdiary-content").contents());
+    console.log("textmd", "'" + textmd + "'");
+
+    const htmlmd = htmlFromTextMd(textmd);
+    console.log("htmlmd", "'" + htmlmd + "'");
+
+
+    //$("#hashdiary-content").html(htmlmd);
     $("#hashdiary-content").html(newHtml);
 
 
