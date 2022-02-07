@@ -40,9 +40,21 @@ function htmlifyText(line) {
 const BR_KEY = "875320567353920586756"
 const END_DIV_KEY = "9090473623729304874"
 
-/*function htmlFromMarkdown(markdown) {
+function htmlFromMarkdown(markdown) {
+    const lines = markdown.split("\n")
+    let html = "";
 
-}*/
+    for (line of lines) {
+        /*if (line.startsWith("#")) {
+            html += ""
+        }*/
+        htmlLine = htmlifyText(line);
+        div = `<div>${htmlLine}<br></div>`;
+        html += div;
+    }
+
+    return html;
+}
 
 function htmlify(contents, recur = false, markdown = null) {
     if (markdown == null) {
@@ -222,21 +234,39 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     $("#hashdiary-content span:empty").remove();
     $("#hashdiary-content")[0].normalize();
 
-    const unwrapped = $("#hashdiary-content").html();
-    //console.log("unwrapped", unwrapped)
-
+    //const unwrapped = $("#hashdiary-content").html();
+ 
     const [newHtml, markdown] = htmlify($("#hashdiary-content").contents());
     console.log("newHtml", "'" + newHtml + "'");
     console.log("markdown", "'" + markdown + "'");
-
-    //const textmd = toTextMd($("#hashdiary-content").contents());
-    //console.log("textmd", "'" + textmd + "'");
-
-    //const htmlmd = htmlFromTextMd(textmd);
-    //console.log("htmlmd", "'" + htmlmd + "'");
+    console.log("htmlFromMarkdown", "'" + htmlFromMarkdown(markdown) + "'");
+ 
 
 
-    //$("#hashdiary-content").html(htmlmd);
+
+
+    const htmlFromMd = htmlFromMarkdown(markdown)
+    console.log(htmlFromMd)
+    $("#hashdiary-scratchpad").html(htmlFromMd)
+
+
+    $("#hashdiary-scratchpad .hd-markup").contents().unwrap().siblings(".hd-markup").remove();
+    $("#hashdiary-scratchpad span:empty").remove();
+    $("#hashdiary-scratchpad")[0].normalize();
+
+    const [_, markdown2] = htmlify($("#hashdiary-scratchpad").contents());
+
+    if (markdown != markdown2) {
+        console.error("Markdown does not match")
+    }
+
+    
+
+
+    //if ()
+
+
+    $("#hashdiary-content").html(htmlFromMarkdown(markdown));
     $("#hashdiary-content").html(newHtml);
 
 
