@@ -188,6 +188,22 @@ function removeMarker() {
 
 }
 
+function renderHtml(divId) {
+    // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
+    $(`${divId} .hd-markup`).contents().unwrap().siblings(".hd-markup").remove();
+    $(`${divId} span:empty`).remove();
+    $(divId)[0].normalize();
+
+ 
+    const [newHtml, markdown] = htmlify($(divId).contents());
+    //console.log("newHtml", "'" + newHtml + "'");
+    //console.log("markdown", "'" + markdown + "'");
+    //console.log("htmlFromMarkdown", "'" + htmlFromMarkdown(markdown) + "'");
+ 
+    $(`${divId}`).html(newHtml);
+    return markdown;
+}
+
 document.getElementById("hashdiary-content").addEventListener("input", function(event) {
     
     // setTimeout(function(){
@@ -226,37 +242,19 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
     insertMarkerAtCaret(event.inputType == "insertParagraph");
 
-    const oldHtml = $("#hashdiary-content").html();
-    //console.log("old", oldHtml)
-
-    // https://stackoverflow.com/questions/32499027/unwrap-all-paragraph-tags-inside-the-div-jquery
-    $(".hd-markup").contents().unwrap().siblings(".hd-markup").remove();
-    $("#hashdiary-content span:empty").remove();
-    $("#hashdiary-content")[0].normalize();
-
-    //const unwrapped = $("#hashdiary-content").html();
  
-    const [newHtml, markdown] = htmlify($("#hashdiary-content").contents());
-    console.log("newHtml", "'" + newHtml + "'");
-    console.log("markdown", "'" + markdown + "'");
-    console.log("htmlFromMarkdown", "'" + htmlFromMarkdown(markdown) + "'");
- 
+    const markdown = renderHtml("#hashdiary-content");
+    //const markdown2 = renderHtml("")
 
 
 
 
     const htmlFromMd = htmlFromMarkdown(markdown)
-    console.log(htmlFromMd)
     $("#hashdiary-scratchpad").html(htmlFromMd)
 
+    const markdownScratch = renderHtml("#hashdiary-scratchpad");
 
-    $("#hashdiary-scratchpad .hd-markup").contents().unwrap().siblings(".hd-markup").remove();
-    $("#hashdiary-scratchpad span:empty").remove();
-    $("#hashdiary-scratchpad")[0].normalize();
-
-    const [_, markdown2] = htmlify($("#hashdiary-scratchpad").contents());
-
-    if (markdown != markdown2) {
+    if (markdown != markdownScratch) {
         console.error("Markdown does not match")
     }
 
@@ -266,8 +264,7 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
     //if ()
 
 
-    $("#hashdiary-content").html(htmlFromMarkdown(markdown));
-    $("#hashdiary-content").html(newHtml);
+    //$("#hashdiary-content").html(htmlFromMarkdown(markdown));
 
 
 
