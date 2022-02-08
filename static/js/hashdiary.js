@@ -22,7 +22,7 @@ function insertMarkerAtCaret(insertPara) {
 BOLD_REGEX = /\*\*([^*]+?)\*\*/g
 ITALICS_REGEX = /\*([^*]+?)\*/g
 
-function stylizeText(line) {
+function stylizeTextOld(line) {
     line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
     //console.log("line", line)
     line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
@@ -56,6 +56,23 @@ function htmlifyTextOld(line) {
     return result;
 }
 
+function stylizeText(line) {
+    let result = undefined;
+    
+    //line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
+    //console.log("line", line)
+    //line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
+    const bold = `\\*((?:(?:${MARKER_KEY})?))\\*([^*]+?)\\*((?:(?:${MARKER_KEY})?))\\*`
+    const boldRe = new RegExp(bold, "g")
+    const boldReplacement = "<span class='hd-bold-star hd-markup'>&ast;$1&ast;</span><span class='hd-bold hd-markup'>$2</span><span class='hd-bold-star hd-markup'>&ast;$3&ast;</span>";
+    result = line.replace(boldRe, boldReplacement)
+
+
+    //const ITALICS_REGEX = /\*([^*]+?)\*/g
+
+    return result;
+}
+
 function htmlifyText(line) {
     let result = undefined;
 
@@ -80,7 +97,7 @@ function htmlifyText(line) {
         const replacement = "$1<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>$2</span>"
         result = line.replace(hashOneRe, replacement);
     } else {
-        result = line;
+        result = stylizeText(line);
     }
 
     //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
