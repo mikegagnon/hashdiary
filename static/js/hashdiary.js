@@ -21,10 +21,6 @@ function insertMarkerAtCaret(insertPara) {
 
 
 function stylizeText(line) {
-
-    //line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
-    //console.log("line", line)
-    //line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
     const bold = `\\*((?:(?:${MARKER_KEY})?))\\*([^*]+?)\\*((?:(?:${MARKER_KEY})?))\\*`
     const boldRe = new RegExp(bold, "g")
     const boldReplacement = "<span class='hd-bold-star hd-markup'>&ast;$1&ast;</span><span class='hd-bold hd-markup'>$2</span><span class='hd-bold-star hd-markup'>&ast;$3&ast;</span>";
@@ -35,8 +31,42 @@ function stylizeText(line) {
     const italicsReplacement = "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>";
     line = line.replace(italicsRe, italicsReplacement)
 
+    return line;
+}
 
-    //const ITALICS_REGEX = /\*([^*]+?)\*/g
+//function findAllMat
+
+function linkSub(line, match) {
+    const markerIndex = match.indexOf(MARKER_KEY);
+    if (markerIndex >= 0) {
+        const matchWithoutMarker = match.replace(MARKER_KEY, "");
+        const url = matchWithoutMarker.slice(1, -1) // drop the brackets
+        const urlWithMarker = match.slice(1,-1)
+        const replacement = `<span class='hd-link-bracket hd-markup'>[</span><a href='${url}' class='hd-link hd-markup'>${urlWithMarker}</a><span class='hd-link-bracket hd-markup'>]</span>`;
+        line = line.replace(match, replacement);
+    } else {
+        const url = match.slice(1, -1) // drop the brackets
+        const replacement = `<span class='hd-link-bracket hd-markup'>[</span><a href='${url}' class='hd-link hd-markup'>${url}</a><span class='hd-link-bracket hd-markup'>]</span>`;
+        line = line.replace(match, replacement);
+    }
+
+    return line;
+}
+
+// Couldn't figure out how to do this with regex replace
+function linkify(line) {
+    const link = `(\\[([^*]+?)\\])`
+    const linkRe = new RegExp(link, "g")
+    const linkReplacement = "<span class='hd-link-bracket hd-markup'>[</span><a href='$1' class='hd-link hd-markup'>$1</a><span class='hd-link-bracket hd-markup'>]</span>";
+    //line = line.replace(linkRe, linkReplacement)
+    console.log(line.match(linkRe))
+    const matches = line.match(linkRe);
+    if (matches !== null) {
+        for (match of matches) {
+            console.log(match);
+            line = linkSub(line, match)
+        }
+    }
 
     return line;
 }
@@ -66,6 +96,7 @@ function htmlifyText(line) {
         result = line.replace(hashOneRe, replacement);
     } else {
         result = stylizeText(line);
+        result = linkify(result);
     }
 
     //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
