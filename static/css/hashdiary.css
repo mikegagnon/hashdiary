@@ -87,13 +87,13 @@ body {
     color: #999;
 }
 
-.hd-hashlink-hash {
+.hd-hashlink-tag {
     color: hotpink !important;
     text-decoration: none;
 }
 
-.hd-hashlink-tag {
-    color: hotpink !important;
+.hd-hashlink-tag-exists {
+    color: lime !important;
     text-decoration: none;
 }
 

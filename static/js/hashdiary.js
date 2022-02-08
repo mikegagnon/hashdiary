@@ -77,18 +77,35 @@ function hashtagToUrl(hashtag) {
     return "/page/" + hashtag
 }
 
+function doesPageExist(hashtag) {
+    return HASH_PAGES.has(hashtag);
+}
+
 function hashtagSub(line, match) {
     const markerIndex = match.indexOf(MARKER_KEY);
     if (markerIndex >= 0) {
         const matchWithoutMarker = match.replace(MARKER_KEY, "");
-        const url = hashtagToUrl(matchWithoutMarker.slice(1));
+        const tag = matchWithoutMarker.slice(1)
+        const url = hashtagToUrl(tag);
+
+        let existClassTail = "";
+        if (doesPageExist(tag)) {
+            existClassTail = "-exists";
+        }
+
         const hashtagWithMarker = match.slice(1)
-        const replacement = `<a href='${url}' class='hd-hashlink-tag hd-markup'><span class='hd-hashlink-hash hd-markup'>#</span>${hashtagWithMarker}</a>`;
+        const replacement = `<a href='${url}' class='hd-hashlink-tag${existClassTail} hd-markup'>#${hashtagWithMarker}</a>`;
         line = line.replace(match, replacement)
     } else {
         const url = hashtagToUrl(match.slice(1));
-        const hashtag = match.slice(1);
-        const replacement = `<a href='${url}' class='hd-hashlink-tag hd-markup'><span class='hd-hashlink-hash hd-markup'>#</span>${hashtag}</a>`;
+        const tag = match.slice(1);
+
+        let existClassTail = "";
+        if (doesPageExist(tag)) {
+            existClassTail = "-exists";
+        }
+
+        const replacement = `<a href='${url}' class='hd-hashlink-tag${existClassTail} hd-markup'>#${tag}</a>`;
         line = line.replace(match, replacement)
     }
     return line;
