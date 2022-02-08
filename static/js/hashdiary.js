@@ -326,3 +326,9 @@ setTimeout(function() {
     div.focus();
     //div.innerHTML = "\n";
 }, 0);
+
+$("#save-button").click(function(){
+    //alert(1);
+    $("#hashdiary-content").removeAttr("contenteditable");
+    $("main").removeClass("edit-bg");
+})
