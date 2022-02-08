@@ -331,4 +331,24 @@ $("#save-button").click(function(){
     //alert(1);
     $("#hashdiary-content").removeAttr("contenteditable");
     $("main").removeClass("edit-bg");
-})
+    $("#save-button").attr("disabled", true);
+    $("#save-button").removeClass("btn-danger");
+    $("#save-button").addClass("btn-secondary");
+
+    $("#edit-button").removeAttr("disabled");
+    $("#edit-button").removeClass("btn-secondary");
+    $("#edit-button").addClass("btn-primary");
+});
+
+$("#edit-button").click(function(){
+    //alert(1);
+    $("#hashdiary-content").attr("contenteditable", true);
+    $("main").addClass("edit-bg");
+    $("#save-button").removeAttr("disabled");
+    $("#save-button").addClass("btn-danger");
+    $("#save-button").removeClass("btn-secondary");
+
+    $("#edit-button").attr("disabled", true);
+    $("#edit-button").addClass("btn-secondary");
+    $("#edit-button").removeClass("btn-primary");
+});
