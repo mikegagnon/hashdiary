@@ -19,10 +19,13 @@ function insertMarkerAtCaret(insertPara) {
     return;
 }
 
-BOLD_REGEX = /\*\*(.+?)\*\*/g
+BOLD_REGEX = /\*\*([^*]+?)\*\*/g
+ITALICS_REGEX = /\*([^*]+?)\*/g
 
 function stylizeText(line) {
-    line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>**</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>**</span>")
+    line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
+    //console.log("line", line)
+    line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
     return line
 }
 

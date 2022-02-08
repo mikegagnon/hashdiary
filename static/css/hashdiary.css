@@ -63,3 +63,12 @@ body {
 .hd-bold-star {
     color: #999;
 }
+
+.hd-italics {
+    font-style: italic;
+    font-family: "Helvetica";
+}
+
+.hd-italics-star {
+    color: #999;
+}
