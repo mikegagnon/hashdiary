@@ -88,12 +88,12 @@ body {
 }
 
 .hd-hashlink-tag {
-    color: hotpink !important;
+    color: #b57aff !important;
     text-decoration: none;
 }
 
 .hd-hashlink-tag-exists {
-    color: lime !important;
+    color: #94e500 !important;
     text-decoration: none;
 }
 
