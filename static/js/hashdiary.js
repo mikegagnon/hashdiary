@@ -1,4 +1,9 @@
 const MARKER_KEY = "7604267184203909339143050075566922885063";
+const HASH_PAGES = new Set([
+        "foo",
+        "foo-bar",
+        "foo-baz"
+    ]);
 
 function insertMarkerAtCaret(insertPara) {
     //console.log(insertPara)
@@ -19,18 +24,17 @@ function insertMarkerAtCaret(insertPara) {
     return;
 }
 
+const BOLD_RE_STR = `\\*((?:(?:${MARKER_KEY})?))\\*([^*]+?)\\*((?:(?:${MARKER_KEY})?))\\*`
+const BOLD_RE = new RegExp(BOLD_RE_STR, "g")
+const BOLD_REPLACEMENT = "<span class='hd-bold-star hd-markup'>&ast;$1&ast;</span><span class='hd-bold hd-markup'>$2</span><span class='hd-bold-star hd-markup'>&ast;$3&ast;</span>";
+
+const ITALICS_RE_STR = `\\*([^*]+?)\\*`
+const ITALICS_RE = new RegExp(ITALICS_RE_STR, "g")
+const ITALICS_REPLACEMENT = "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>";
 
 function stylizeText(line) {
-    const bold = `\\*((?:(?:${MARKER_KEY})?))\\*([^*]+?)\\*((?:(?:${MARKER_KEY})?))\\*`
-    const boldRe = new RegExp(bold, "g")
-    const boldReplacement = "<span class='hd-bold-star hd-markup'>&ast;$1&ast;</span><span class='hd-bold hd-markup'>$2</span><span class='hd-bold-star hd-markup'>&ast;$3&ast;</span>";
-    line = line.replace(boldRe, boldReplacement)
-
-    const italics = `\\*([^*]+?)\\*`
-    const italicsRe = new RegExp(italics, "g")
-    const italicsReplacement = "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>";
-    line = line.replace(italicsRe, italicsReplacement)
-
+    line = line.replace(BOLD_RE, BOLD_REPLACEMENT)
+    line = line.replace(ITALICS_RE, ITALICS_REPLACEMENT)
     return line;
 }
 
@@ -53,14 +57,15 @@ function linkSub(line, match) {
     return line;
 }
 
-// Couldn't figure out how to do this with regex replace
+const LINK_RE_STR = `(\\[([^*]+?)\\])`
+const LINK_RE = new RegExp(LINK_RE_STR, "g")
+//const LINK_REPLACEMENT = "<span class='hd-link-bracket hd-markup'>[</span><a href='$1' class='hd-link hd-markup'>$1</a><span class='hd-link-bracket hd-markup'>]</span>";
+
+// Couldn't figure out how to do this purely with regex replace
 function linkify(line) {
-    const link = `(\\[([^*]+?)\\])`
-    const linkRe = new RegExp(link, "g")
-    const linkReplacement = "<span class='hd-link-bracket hd-markup'>[</span><a href='$1' class='hd-link hd-markup'>$1</a><span class='hd-link-bracket hd-markup'>]</span>";
     //line = line.replace(linkRe, linkReplacement)
-    console.log(line.match(linkRe))
-    const matches = line.match(linkRe);
+    console.log(line.match(LINK_RE))
+    const matches = line.match(LINK_RE);
     if (matches !== null) {
         for (match of matches) {
             console.log(match);
@@ -71,32 +76,39 @@ function linkify(line) {
     return line;
 }
 
+function hashify(line) {
+    const hashtag = `(#[A-Za-z0-9\-_]+)`
+    const hashtagRe = new RegExp(hashtag, "g")
+    return line
+}
+
+const HASH_THREE_RE_STR = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))# (.*)`;
+const HASH_THREE_RE = new RegExp(HASH_THREE_RE_STR,"g");
+const HASH_THREE_REPLACEMENT = "$1<span class='hd-header-3-hash hd-markup'>#$2#$3# </span><span class='hd-header-3 hd-markup'>$4</span>"
+
+const HASH_TWO_RE_STR = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))# (.*)`;
+const HASH_TWO_RE = new RegExp(HASH_TWO_RE_STR,"g");
+const HASH_TWO_REPLACEMENT = "$1<span class='hd-header-2-hash hd-markup'>#$2# </span><span class='hd-header-2 hd-markup'>$3</span>"
+
+const HASH_ONE_RE_STR = `^((?:(?:${MARKER_KEY})?))# (.*)`;
+const HASH_ONE_RE = new RegExp(HASH_ONE_RE_STR,"g");
+const HASH_ONE_REPLACEMENT = "$1<span class='hd-header-1-hash hd-markup'># </span><span class='hd-header-1 hd-markup'>$2</span>"
+
 function htmlifyText(line) {
     let result = undefined;
 
     line = escapeHtml(line);
 
-    var hashThree = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))# (.*)`;
-    var hashThreeRe = new RegExp(hashThree,"g");
-
-    var hashTwo = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))# (.*)`;
-    var hashTwoRe = new RegExp(hashTwo,"g");
-
-    var hashOne = `^((?:(?:${MARKER_KEY})?))# (.*)`;
-    var hashOneRe = new RegExp(hashOne,"g");
-
-    if (line.match(hashThreeRe)) {
-        const replacement = "$1<span class='hd-header-3-hash hd-markup'>#$2#$3# </span><span class='hd-header-3 hd-markup'>$4</span>"
-        result = line.replace(hashThreeRe, replacement);
-    } else if (line.match(hashTwoRe)) {
-        const replacement = "$1<span class='hd-header-2-hash hd-markup'>#$2# </span><span class='hd-header-2 hd-markup'>$3</span>"
-        result = line.replace(hashTwoRe, replacement);
-    } else if (line.match(hashOneRe)) {
-        const replacement = "$1<span class='hd-header-1-hash hd-markup'># </span><span class='hd-header-1 hd-markup'>$2</span>"
-        result = line.replace(hashOneRe, replacement);
+    if (line.match(HASH_THREE_RE)) {
+        result = line.replace(HASH_THREE_RE, HASH_THREE_REPLACEMENT);
+    } else if (line.match(HASH_TWO_RE)) {
+        result = line.replace(HASH_TWO_RE, HASH_TWO_REPLACEMENT);
+    } else if (line.match(HASH_ONE_RE)) {
+        result = line.replace(HASH_ONE_RE, HASH_ONE_REPLACEMENT);
     } else {
         result = stylizeText(line);
         result = linkify(result);
+        result = hashify(result);
     }
 
     //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
