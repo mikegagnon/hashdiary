@@ -57,20 +57,24 @@ function htmlifyTextOld(line) {
 }
 
 function stylizeText(line) {
-    let result = undefined;
-    
+
     //line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
     //console.log("line", line)
     //line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
     const bold = `\\*((?:(?:${MARKER_KEY})?))\\*([^*]+?)\\*((?:(?:${MARKER_KEY})?))\\*`
     const boldRe = new RegExp(bold, "g")
     const boldReplacement = "<span class='hd-bold-star hd-markup'>&ast;$1&ast;</span><span class='hd-bold hd-markup'>$2</span><span class='hd-bold-star hd-markup'>&ast;$3&ast;</span>";
-    result = line.replace(boldRe, boldReplacement)
+    line = line.replace(boldRe, boldReplacement)
+
+    const italics = `\\*([^*]+?)\\*`
+    const italicsRe = new RegExp(italics, "g")
+    const italicsReplacement = "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>";
+    line = line.replace(italicsRe, italicsReplacement)
 
 
     //const ITALICS_REGEX = /\*([^*]+?)\*/g
 
-    return result;
+    return line;
 }
 
 function htmlifyText(line) {
