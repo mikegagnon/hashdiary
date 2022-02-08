@@ -46,7 +46,7 @@ function linkSub(line, match) {
         line = line.replace(match, replacement);
     } else {
         const url = match.slice(1, -1) // drop the brackets
-        const replacement = `<span class='hd-link-bracket hd-markup'>[</span><a href='${url}' class='hd-link hd-markup'>${url}</a><span class='hd-link-bracket hd-markup'>]</span>`;
+        const replacement = `<span class='hd-link-bracket hd-markup'>[</span><a onclick="alert(1)" href='${url}' class='hd-link hd-markup'>${url}</a><span class='hd-link-bracket hd-markup'>]</span>`;
         line = line.replace(match, replacement);
     }
 

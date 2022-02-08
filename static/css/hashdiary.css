@@ -73,7 +73,13 @@ body {
     color: #999;
 }
 
-.hd-link {}
+.hd-link {
+    color: #14c3f3;
+}
+
+.hd-link:hover {
+  color: #00c8ff;
+}
 
 .hd-link-bracket {
     color: #999;
