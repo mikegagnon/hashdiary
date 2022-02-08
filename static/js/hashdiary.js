@@ -19,42 +19,6 @@ function insertMarkerAtCaret(insertPara) {
     return;
 }
 
-BOLD_REGEX = /\*\*([^*]+?)\*\*/g
-ITALICS_REGEX = /\*([^*]+?)\*/g
-
-function stylizeTextOld(line) {
-    line = line.replace(BOLD_REGEX, "<span class='hd-bold-star hd-markup'>&ast;&ast;</span><span class='hd-bold hd-markup'>$1</span><span class='hd-bold-star hd-markup'>&ast;&ast;</span>")
-    //console.log("line", line)
-    line = line.replace(ITALICS_REGEX, "<span class='hd-italics-star hd-markup'>&ast;</span><span class='hd-italics hd-markup'>$1</span><span class='hd-italics-star hd-markup'>&ast;</span>")
-    return line
-}
-
-function htmlifyTextOld(line) {
-    let result = undefined;
-
-    line = escapeHtml(line);
-
-    if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("###")) {
-        const markerRemoved = line.replace(MARKER_KEY, "");
-        result = `${MARKER_KEY}<span class='hd-header-3-hash hd-markup'>###</span><span class='hd-header-3 hd-markup'>${markerRemoved.slice(3)}</span>`
-    } else if (line.startsWith("###")) {
-        result = `<span class='hd-header-3-hash hd-markup'>###</span><span class='hd-header-3 hd-markup'>${line.slice(3)}</span>`
-    } else if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("##")) {
-        const markerRemoved = line.replace(MARKER_KEY, "");
-        result = `${MARKER_KEY}<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-2 hd-markup'>${markerRemoved.slice(2)}</span>`
-    } else if (line.startsWith("##")) {
-        result = `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-2 hd-markup'>${line.slice(2)}</span>`
-    } else if (line.startsWith(MARKER_KEY) && line.replace(MARKER_KEY, "").startsWith("#")) {
-        const markerRemoved = line.replace(MARKER_KEY, "");
-        result = `${MARKER_KEY}<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${markerRemoved.slice(1)}</span>`
-    } else if (line.startsWith("#")) {
-        result = `<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`
-    } else {
-        result = stylizeText(line);
-    }
-    
-    return result;
-}
 
 function stylizeText(line) {
 
