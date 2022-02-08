@@ -29,7 +29,7 @@ function stylizeText(line) {
     return line
 }
 
-function htmlifyText(line) {
+function htmlifyTextOld(line) {
     let result = undefined;
 
     line = escapeHtml(line);
@@ -52,6 +52,38 @@ function htmlifyText(line) {
     } else {
         result = stylizeText(line);
     }
+    
+    return result;
+}
+
+function htmlifyText(line) {
+    let result = undefined;
+
+    line = escapeHtml(line);
+
+    var hashThree = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#(.*)`;
+    var hashThreeRe = new RegExp(hashThree,"g");
+
+    var hashTwo = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#(.*)`;
+    var hashTwoRe = new RegExp(hashTwo,"g");
+
+    var hashOne = `^((?:(?:${MARKER_KEY})?))#(.*)`;
+    var hashOneRe = new RegExp(hashOne,"g");
+
+    if (line.match(hashThreeRe)) {
+        const replacement = "$1<span class='hd-header-3-hash hd-markup'>#$2#$3#</span><span class='hd-header-3 hd-markup'>$4</span>"
+        result = line.replace(hashThreeRe, replacement);
+    } else if (line.match(hashTwoRe)) {
+        const replacement = "$1<span class='hd-header-2-hash hd-markup'>#$2#</span><span class='hd-header-2 hd-markup'>$3</span>"
+        result = line.replace(hashTwoRe, replacement);
+    } else if (line.match(hashOneRe)) {
+        const replacement = "$1<span class='hd-header-1-hash hd-markup'>#</span><span class='hd-header-1 hd-markup'>$2</span>"
+        result = line.replace(hashOneRe, replacement);
+    } else {
+        result = line;
+    }
+
+    //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
     
     return result;
 }
