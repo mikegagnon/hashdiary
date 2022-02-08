@@ -84,3 +84,7 @@ body {
 .hd-link-bracket {
     color: #999;
 }
+
+.navbar {
+    border-bottom: 1px solid #888;
+}
