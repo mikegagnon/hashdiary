@@ -87,6 +87,16 @@ body {
     color: #999;
 }
 
+.hd-hashlink-hash {
+    color: hotpink !important;
+    text-decoration: none;
+}
+
+.hd-hashlink-tag {
+    color: hotpink !important;
+    text-decoration: none;
+}
+
 .navbar {
     border-bottom: 1px solid #888;
 }
@@ -94,3 +104,4 @@ body {
 .btn {
     margin-right: 8px;
 }
+

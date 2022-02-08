@@ -63,12 +63,9 @@ const LINK_RE = new RegExp(LINK_RE_STR, "g")
 
 // Couldn't figure out how to do this purely with regex replace
 function linkify(line) {
-    //line = line.replace(linkRe, linkReplacement)
-    console.log(line.match(LINK_RE))
     const matches = line.match(LINK_RE);
     if (matches !== null) {
         for (match of matches) {
-            console.log(match);
             line = linkSub(line, match)
         }
     }
@@ -76,10 +73,42 @@ function linkify(line) {
     return line;
 }
 
+function hashtagToUrl(hashtag) {
+    return "/page/" + hashtag
+}
+
+function hashtagSub(line, match) {
+    const markerIndex = match.indexOf(MARKER_KEY);
+    if (markerIndex >= 0) {
+        const matchWithoutMarker = match.replace(MARKER_KEY, "");
+        const url = hashtagToUrl(matchWithoutMarker.slice(1));
+        const hashtagWithMarker = match.slice(1)
+        const replacement = `<a href='${url}' class='hd-hashlink-tag hd-markup'><span class='hd-hashlink-hash hd-markup'>#</span>${hashtagWithMarker}</a>`;
+        line = line.replace(match, replacement)
+    } else {
+        const url = hashtagToUrl(match.slice(1));
+        const hashtag = match.slice(1);
+        const replacement = `<a href='${url}' class='hd-hashlink-tag hd-markup'><span class='hd-hashlink-hash hd-markup'>#</span>${hashtag}</a>`;
+        line = line.replace(match, replacement)
+    }
+    return line;
+}
+
+const HASHTAG_RE_STR = `(#[A-Za-z0-9\-_]+)`
+const HASHTAG_RE = new RegExp(HASHTAG_RE_STR, "g")
+
 function hashify(line) {
-    const hashtag = `(#[A-Za-z0-9\-_]+)`
-    const hashtagRe = new RegExp(hashtag, "g")
-    return line
+    const matches = line.match(HASHTAG_RE);
+    if (matches !== null) {
+        for (match of matches) {
+            const matchWithoutMarker = match.replace(MARKER_KEY, "");
+            if (matchWithoutMarker.length > 1) {
+                line = hashtagSub(line, match);
+            }
+        }
+    }
+
+    return line;
 }
 
 const HASH_THREE_RE_STR = `^((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))#((?:(?:${MARKER_KEY})?))# (.*)`;
