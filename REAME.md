@@ -14,4 +14,4 @@
 ## Bash environment
 
     source export.sh
-    source ~/hashdiary-export.sh # contains secret key
+    source ~/hashdiary-export.sh # contains secret key and MYDIARY directory definition

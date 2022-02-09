@@ -7,6 +7,7 @@ BAD_PASSWORD_MESSAGE = """Incorrect password. Use the new_password.py script to 
 
 
 SECRET_KEY = os.environ["SECRET_KEY"]
+MYDIARY = os.path.expanduser(os.environ["MYDIARY"])
 
 def sanePassword(password):
     return (

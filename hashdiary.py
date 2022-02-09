@@ -23,9 +23,15 @@ bcrypt = Bcrypt(app)
 def root():
     if "loggedin" not in session:
         return redirect(url_for("login"))
+    else:
+        return redirect(url_for("page", pageid="root"))
 
-
+@app.route("/page/<pageid>")
+def page(pageid):
+    if "loggedin" not in session:
+        return redirect(url_for("login")) 
     return render_template("index.html")
+
 
 class LoginForm(FlaskForm):
     password = PasswordField("Password")
