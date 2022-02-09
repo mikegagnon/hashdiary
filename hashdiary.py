@@ -18,7 +18,7 @@ import config
 #     return 
 
 def getPageIds():
-    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.md"))))
+    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.hd.md"))))
 
 def get_saved_pw_hash():
     with open(os.path.expanduser("~/hashdiary-pw.txt"), "r") as f:
@@ -52,8 +52,8 @@ def page(pageid):
         pageids = getPageIds()
 
         try:
-            print(os.path.join(config.MYDIARY, pageid + ".md"))
-            with open(os.path.join(config.MYDIARY, pageid + ".md"), "r") as f:
+            print(os.path.join(config.MYDIARY, pageid + ".hd.md"))
+            with open(os.path.join(config.MYDIARY, pageid + ".hd.md"), "r") as f:
                 contents = f.read()
         except:
             contents = ""
@@ -75,8 +75,8 @@ def page(pageid):
             print("Too many pages")
             abort(403)
 
-        print(os.path.join(config.MYDIARY, pageid + ".md"))
-        with open(os.path.join(config.MYDIARY, pageid + ".md"), "w") as f:
+        print(os.path.join(config.MYDIARY, pageid + ".hd.md"))
+        with open(os.path.join(config.MYDIARY, pageid + ".hd.md"), "w") as f:
             f.write(md)
 
         print("Saved", pageid)
