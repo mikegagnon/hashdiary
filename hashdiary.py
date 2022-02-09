@@ -28,9 +28,20 @@ def root():
 
 @app.route("/page/<pageid>")
 def page(pageid):
+    if not config.sanePageID(pageid):
+        abort(404)
+
     if "loggedin" not in session:
         return redirect(url_for("login")) 
-    return render_template("index.html")
+
+    try:
+        print(os.path.join(config.MYDIARY, pageid + ".hd"))
+        with open(os.path.join(config.MYDIARY, pageid + ".hd"), "r") as f:
+            contents = f.read()
+    except:
+        contents = "Missing"
+
+    return render_template("page.html", contents=contents)
 
 
 class LoginForm(FlaskForm):

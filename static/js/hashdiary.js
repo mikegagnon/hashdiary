@@ -410,3 +410,10 @@ $("#edit-button").click(function(){
     $("#edit-button").addClass("btn-secondary");
     $("#edit-button").removeClass("btn-primary");
 });
+
+
+function main() {
+    const html = htmlFromMarkdown(CONTENTS);
+    $("#hashdiary-content").html(html);
+}
+main();

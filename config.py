@@ -1,3 +1,4 @@
+import re
 import os
 
 MIN_PASSWORD_LEN = 3
@@ -14,3 +15,15 @@ def sanePassword(password):
         len(password) >= MIN_PASSWORD_LEN and
         len(password) <= MAX_PASSWORD_LEN
     )
+
+PAGEID_RE = re.compile(r"^[A-Za-z0-9\-_]+$", re.UNICODE)
+
+def sanePageID(pageid):
+    if not PAGEID_RE.match(pageid):
+        return False
+    elif len(pageid) < 1 or len(pageid) > 128:
+        return False
+    else:
+        return True
+
+
