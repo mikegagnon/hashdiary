@@ -214,6 +214,14 @@ function escapeHtml (string) {
   });
 }
 
+/*function unescapeHtml(string) {
+    return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return entityMap[s];
+    });   
+}*/
+
+
+
 
 function htmlify(contents, recur = false, markdown = null) {
     if (markdown == null) {
