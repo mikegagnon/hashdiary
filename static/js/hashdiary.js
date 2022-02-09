@@ -151,7 +151,9 @@ const HASH_ONE_REPLACEMENT = "$1<span class='hd-header-1-hash hd-markup'># </spa
 function htmlifyText(line) {
     let result = undefined;
 
+    console.log("before line", line);
     line = escapeHtml(line);
+    console.log("after  line", line);
 
     if (line.match(HASH_THREE_RE)) {
         result = line.replace(HASH_THREE_RE, HASH_THREE_REPLACEMENT);
@@ -164,6 +166,8 @@ function htmlifyText(line) {
         result = linkify(result);
         result = hashify(result);
     }
+
+    console.log("result htmlifyText", result)
 
     //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
     
@@ -181,8 +185,10 @@ function htmlFromMarkdown(markdown) {
         /*if (line.startsWith("#")) {
             html += ""
         }*/
+        console.log("htmlFromMarkdown line", line)
         htmlLine = htmlifyText(line);
         div = `<div>${htmlLine}<br></div>`;
+        //console.log("div", div)
         html += div;
     }
 
@@ -233,8 +239,8 @@ function htmlify(contents, recur = false, markdown = null) {
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
             const x = htmlifyText(this.nodeValue)
-            markdown[0] += this.nodeValue;
-
+            markdown[0] += (this.nodeValue);
+            console.log("x", x);
             if (recur) {
                 return x;
             } else {
@@ -277,7 +283,7 @@ function htmlify(contents, recur = false, markdown = null) {
 }
 
 function toTextMd(contents) {
-    const textmd = contents.map(function(){
+    let textmd = contents.map(function(){
         if (this.nodeName == "#text") {
             //return htmlifyText(this.textContents)
             return this.nodeValue
@@ -293,6 +299,8 @@ function toTextMd(contents) {
             console.error("unhandled", this.nodeName)
         }
     }).get().join("");
+
+    textmd = decodeEntities(textmd)
 
     return textmd.replace(MARKER_KEY, "");
 }
@@ -364,6 +372,7 @@ function renderHtml(divId) {
  
     const [newHtml, markdown] = htmlify($(divId).contents());
 
+    console.log("md", markdown)
 
     console.log("newHtml", "'" + newHtml + "'");
     console.log("markdown", "'" + markdown + "'");

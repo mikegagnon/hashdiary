@@ -85,7 +85,7 @@
 
       const HASH_PAGES = new Set({{pageids | safe}});
 
-      const CONTENTS = `{{contents}}`;
+      const CONTENTS = `{{contents | safe}}`;
     </script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}" ></script>
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}" ></script>
