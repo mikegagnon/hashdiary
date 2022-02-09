@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hashdiary</title>
+    <title>Login</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/headers/">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png')}}">
     <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
@@ -43,7 +43,7 @@
 
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">#root</a>
+    <a class="navbar-brand" href="#">Login</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -51,10 +51,10 @@
       <ul class="navbar-nav me-auto mb-2 mb-md-0">
 
       </ul>
-      <div class="d-flex">
+      <!--<div class="d-flex">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-        <li class="nav-item" style="margin-right: 10px">
-          <a href="{{ url_for('login')}}">Login</a> 
+        <li class="nav-item">
+          <button id="login-button" class="btn btn-secondary">Login</button>
         </li>
         <li class="nav-item">
           <button id="edit-button" class="btn btn-secondary" disabled>Edit</button>
@@ -63,26 +63,36 @@
           <button id="save-button" class="btn btn-danger">Save</button>
         </li>
       </ul>
-      </div>
+      </div>-->
     </div>
   </div>
 </nav>
 
-<main class="edit-bg">
+<main class="container">
+  <form action="{{ url_for('login') }}" method="post">
 
-  <div class="container">
-    
+    {% if message %}
+    <div class="alert alert-warning" role="alert">
+      <p>{{ message }}</p>
+    </div>
+    {% endif %}
 
+    <div class="mb-3">
+      <label for="password">Password</label>
+      <div class="input-group">
+        <input type="password" class="form-control" name="password" id="password1" placeholder="Password" required>
+      </div>
+    </div>
 
-    <div id="hashdiary-content" class="hashdiary-container" style="white-space: pre-line;" contenteditable></div>
+    <div><button type="submit" class="btn btn-primary">Login</button></div>
 
-    <div id="hashdiary-scratchpad" style="display: none;"></div>
-  </div>
+    {{ form.csrf_token }}
+
+  </form>
 </main>
 
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}" ></script>
     <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}" ></script>
-    <script src="{{ url_for('static', filename='js/hashdiary.js')}}" ></script>
 
   </body>
 </html>
