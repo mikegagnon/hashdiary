@@ -54,7 +54,7 @@ def page(pageid):
     except:
         contents = "Missing"
 
-    return render_template("page.html", contents=contents, pageids=pageids)
+    return render_template("page.html", contents=contents, pageids=pageids, pageid=pageid)
 
 
 class LoginForm(FlaskForm):

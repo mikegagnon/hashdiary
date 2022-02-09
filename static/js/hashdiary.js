@@ -378,11 +378,8 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
 
 
-
-
-$("#save-button").click(function(){
-    //alert(1);
-    $("#hashdiary-content").removeAttr("contenteditable");
+function clickSave() {
+     $("#hashdiary-content").removeAttr("contenteditable");
     $("main").removeClass("edit-bg");
     $("#save-button").attr("disabled", true);
     $("#save-button").removeClass("btn-danger");
@@ -391,10 +388,9 @@ $("#save-button").click(function(){
     $("#edit-button").removeAttr("disabled");
     $("#edit-button").removeClass("btn-secondary");
     $("#edit-button").addClass("btn-primary");
-});
+}
 
-$("#edit-button").click(function(){
-    //alert(1);
+function clickEdit() {
     $("#hashdiary-content").attr("contenteditable", true);
     $("main").addClass("edit-bg");
     $("#save-button").removeAttr("disabled");
@@ -404,6 +400,16 @@ $("#edit-button").click(function(){
     $("#edit-button").attr("disabled", true);
     $("#edit-button").addClass("btn-secondary");
     $("#edit-button").removeClass("btn-primary");
+}
+
+$("#save-button").click(function(){
+    //alert(1);
+    clickSave();
+});
+
+$("#edit-button").click(function(){
+    //alert(1);
+    clickEdit();
 });
 
 
@@ -411,7 +417,8 @@ function main() {
     const html = htmlFromMarkdown(CONTENTS);
     $("#hashdiary-content").html(html);
 
-    
+    clickSave();
+
     var div = document.getElementById('hashdiary-content');
     setTimeout(function() {
         div.focus();
