@@ -1,3 +1,4 @@
+import glob
 import os
 import sys
 from flask import Flask
@@ -8,6 +9,16 @@ from wtforms import StringField, PasswordField
 from flask_bcrypt import Bcrypt
 
 import config
+
+# PAGEIDS = None
+
+# def updatePageIds():
+#     nonlocal PAGEIDS
+#     PAGEIDS = list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.hd"))))
+#     return 
+
+def getPageIds():
+    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.hd"))))
 
 def get_saved_pw_hash():
     with open(os.path.expanduser("~/hashdiary-pw.txt"), "r") as f:
@@ -28,6 +39,8 @@ def root():
 
 @app.route("/page/<pageid>")
 def page(pageid):
+    pageids = getPageIds()
+
     if not config.sanePageID(pageid):
         abort(404)
 
@@ -41,7 +54,7 @@ def page(pageid):
     except:
         contents = "Missing"
 
-    return render_template("page.html", contents=contents)
+    return render_template("page.html", contents=contents, pageids=pageids)
 
 
 class LoginForm(FlaskForm):

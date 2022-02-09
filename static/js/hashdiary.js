@@ -1,9 +1,9 @@
 const MARKER_KEY = "7604267184203909339143050075566922885063";
-const HASH_PAGES = new Set([
-        "foo",
-        "foo-bar",
-        "foo-baz"
-    ]);
+// const HASH_PAGES = new Set([
+//         "foo",
+//         "foo-bar",
+//         "foo-baz"
+//     ]);
 
 function insertMarkerAtCaret(insertPara) {
     //console.log(insertPara)
@@ -379,11 +379,6 @@ document.getElementById("hashdiary-content").addEventListener("input", function(
 
 
 
-var div = document.getElementById('hashdiary-content');
-setTimeout(function() {
-    div.focus();
-    //div.innerHTML = "\n";
-}, 0);
 
 $("#save-button").click(function(){
     //alert(1);
@@ -415,5 +410,12 @@ $("#edit-button").click(function(){
 function main() {
     const html = htmlFromMarkdown(CONTENTS);
     $("#hashdiary-content").html(html);
+
+    
+    var div = document.getElementById('hashdiary-content');
+    setTimeout(function() {
+        div.focus();
+        //div.innerHTML = "\n";
+    }, 0);
 }
 main();

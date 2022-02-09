@@ -80,6 +80,8 @@
   </div>
 </main>
     <script type="text/javascript">
+      const HASH_PAGES = new Set({{pageids | safe}});
+
       const CONTENTS = `{{contents}}`;
     </script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js')}}" ></script>
