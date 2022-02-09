@@ -78,6 +78,11 @@
   </div>
 </main>
     <script type="text/javascript">
+
+      const CSRF_TOKEN = "{{ csrf_token() }}";
+
+      const PAGEID = "{{pageid}}";
+
       const HASH_PAGES = new Set({{pageids | safe}});
 
       const CONTENTS = `{{contents}}`;

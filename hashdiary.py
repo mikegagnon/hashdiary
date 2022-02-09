@@ -18,7 +18,7 @@ import config
 #     return 
 
 def getPageIds():
-    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.hd"))))
+    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.md"))))
 
 def get_saved_pw_hash():
     with open(os.path.expanduser("~/hashdiary-pw.txt"), "r") as f:
@@ -29,6 +29,7 @@ HASHDIARY_PW_HASH = get_saved_pw_hash()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = config.SECRET_KEY
 bcrypt = Bcrypt(app)
+csrf = CSRFProtect(app)
 
 @app.route("/")
 def root():
@@ -37,24 +38,52 @@ def root():
     else:
         return redirect(url_for("page", pageid="root"))
 
-@app.route("/page/<pageid>")
+@app.route("/page/<pageid>", methods=["GET", "POST"])
 def page(pageid):
-    pageids = getPageIds()
-
+    form = EmptyForm()
     if not config.sanePageID(pageid):
         abort(404)
 
     if "loggedin" not in session:
         return redirect(url_for("login")) 
 
-    try:
-        print(os.path.join(config.MYDIARY, pageid + ".hd"))
-        with open(os.path.join(config.MYDIARY, pageid + ".hd"), "r") as f:
-            contents = f.read()
-    except:
-        contents = "Missing"
+    if request.method == "GET":
 
-    return render_template("page.html", contents=contents, pageids=pageids, pageid=pageid)
+        pageids = getPageIds()
+
+        try:
+            print(os.path.join(config.MYDIARY, pageid + ".md"))
+            with open(os.path.join(config.MYDIARY, pageid + ".md"), "r") as f:
+                contents = f.read()
+        except:
+            contents = ""
+
+        return render_template("page.html", contents=contents, pageids=pageids, pageid=pageid, form=form)
+    elif request.method == "POST":
+        if "md" not in request.json:
+            print("No md")
+            abort(400)
+        md = request.json["md"]
+
+        if not config.saneMarkdown(md):
+            print("not sane markdown")
+            print(md.isprintable())
+            abort(400)
+
+        pageids = getPageIds()
+        if pageid not in pageids and len(pageids) >= config.MAX_PAGES:
+            print("Too many pages")
+            abort(403)
+
+        print(os.path.join(config.MYDIARY, pageid + ".md"))
+        with open(os.path.join(config.MYDIARY, pageid + ".md"), "w") as f:
+            f.write(md)
+
+        print("Saved", pageid)
+        print("request", )
+        return "good"
+    else:
+        abort(400)
 
 
 class LoginForm(FlaskForm):

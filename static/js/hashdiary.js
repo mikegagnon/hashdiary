@@ -1,3 +1,11 @@
+$.ajaxSetup({
+    beforeSend: function beforeSend(xhr, settings) {
+        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", CSRF_TOKEN);
+        }
+    }
+});
+
 const MARKER_KEY = "7604267184203909339143050075566922885063";
 // const HASH_PAGES = new Set([
 //         "foo",
@@ -402,9 +410,26 @@ function clickEdit() {
     $("#edit-button").removeClass("btn-primary");
 }
 
+function postSave() {
+    const markdown = renderHtml("#hashdiary-content");
+    const data = JSON.stringify({
+        "md": markdown
+    })
+    $.ajax({
+      type: "POST",
+      url: `/page/${PAGEID}`,
+      data: data,
+      //dataType: "json",
+      contentType: 'application/json; charset=utf-8',
+      success: function(){console.log("Saved.")},
+      error: function(req, err){console.error("POST ERROR", err)},
+    });
+}
+
 $("#save-button").click(function(){
     //alert(1);
     clickSave();
+    postSave();
 });
 
 $("#edit-button").click(function(){

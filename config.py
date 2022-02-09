@@ -1,6 +1,8 @@
 import re
 import os
 
+MAX_PAGES = 100
+
 MIN_PASSWORD_LEN = 3
 MAX_PASSWORD_LEN = 64
 
@@ -27,3 +29,11 @@ def sanePageID(pageid):
         return True
 
 
+def saneMarkdown(md):
+    if len(md) > 1024 * 500:
+        return False
+    elif not md.replace("\n", "").isprintable():
+        print(md)
+        return False
+    else:
+        return True
