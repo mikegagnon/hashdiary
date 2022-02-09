@@ -442,7 +442,9 @@ function main() {
     const html = htmlFromMarkdown(CONTENTS);
     $("#hashdiary-content").html(html);
 
-    clickSave();
+    if (CONTENTS != "") {
+        clickSave();
+    }
 
     var div = document.getElementById('hashdiary-content');
     setTimeout(function() {
