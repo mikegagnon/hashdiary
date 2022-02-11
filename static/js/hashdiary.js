@@ -1,3 +1,5 @@
+
+
 $.ajaxSetup({
     beforeSend: function beforeSend(xhr, settings) {
         if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
@@ -81,9 +83,7 @@ function linkify(line) {
     return line;
 }
 
-function hashtagToUrl(hashtag) {
-    return "/page/" + hashtag
-}
+
 
 function doesPageExist(hashtag) {
     return HASH_PAGES.has(hashtag);
@@ -122,10 +122,17 @@ function hashtagSub(line, match) {
 const HASHTAG_RE_STR = `(#[A-Za-z0-9\-_]+)`
 const HASHTAG_RE = new RegExp(HASHTAG_RE_STR, "g")
 
+//const ESCAPES = new Set('#39', '#x2F', '#60', '#x3D')
+
 function hashify(line) {
     const matches = line.match(HASHTAG_RE);
     if (matches !== null) {
         for (match of matches) {
+            // console.log("match", match);
+            // if (ESCAPES.has(match)) {
+            //     console.log("match skip", match);
+            //     continue;
+            // }
             const matchWithoutMarker = match.replace(MARKER_KEY, "");
             if (matchWithoutMarker.length > 1) {
                 line = hashtagSub(line, match);
@@ -151,9 +158,9 @@ const HASH_ONE_REPLACEMENT = "$1<span class='hd-header-1-hash hd-markup'># </spa
 function htmlifyText(line) {
     let result = undefined;
 
-    console.log("before line", line);
+    //console.log("before line", line);
     line = escapeHtml(line);
-    console.log("after  line", line);
+    //console.log("after  line", line);
 
     if (line.match(HASH_THREE_RE)) {
         result = line.replace(HASH_THREE_RE, HASH_THREE_REPLACEMENT);
@@ -167,7 +174,7 @@ function htmlifyText(line) {
         result = hashify(result);
     }
 
-    console.log("result htmlifyText", result)
+    //console.log("result htmlifyText", result)
 
     //result = line.replace(hashTwo, `<span class='hd-header-2-hash hd-markup'>##</span><span class='hd-header-1 hd-markup'>${line.slice(1)}</span>`)
     
@@ -185,7 +192,7 @@ function htmlFromMarkdown(markdown) {
         /*if (line.startsWith("#")) {
             html += ""
         }*/
-        console.log("htmlFromMarkdown line", line)
+        //console.log("htmlFromMarkdown line", line)
         htmlLine = htmlifyText(line);
         div = `<div>${htmlLine}<br></div>`;
         //console.log("div", div)
@@ -207,15 +214,11 @@ var entityMap = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
-  '"': '&quot;',
-  "'": '&#39;',
-  '/': '&#x2F;',
-  '`': '&#x60;',
-  '=': '&#x3D;'
+  '"': '&quot;'
 };
 
 function escapeHtml (string) {
-  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+  return String(string).replace(/[&<>"]/g, function (s) {
     return entityMap[s];
   });
 }
@@ -240,7 +243,7 @@ function htmlify(contents, recur = false, markdown = null) {
             //return htmlifyText(this.textContents)
             const x = htmlifyText(this.nodeValue)
             markdown[0] += (this.nodeValue);
-            console.log("x", x);
+            //console.log("x", x);
             if (recur) {
                 return x;
             } else {
@@ -258,7 +261,7 @@ function htmlify(contents, recur = false, markdown = null) {
         } else if ($(this).hasClass("hd-marker")) {
             return this.outerHTML;
         } else {
-            console.error("unhandled", this.nodeName, this)
+            //console.error("unhandled", this.nodeName, this)
         }
     }).get().join("");
 
@@ -372,10 +375,10 @@ function renderHtml(divId) {
  
     const [newHtml, markdown] = htmlify($(divId).contents());
 
-    console.log("md", markdown)
+    //console.log("md", markdown)
 
-    console.log("newHtml", "'" + newHtml + "'");
-    console.log("markdown", "'" + markdown + "'");
+    //console.log("newHtml", "'" + newHtml + "'");
+    //console.log("markdown", "'" + markdown + "'");
     //console.log("htmlFromMarkdown", "'" + htmlFromMarkdown(markdown) + "'");
  
     $(`${divId}`).html(newHtml);
@@ -446,7 +449,9 @@ function postSave() {
 $("#save-button").click(function(){
     //alert(1);
     clickSave();
-    postSave();
+    if (POST_SAVE) {
+        postSave();
+    }
 });
 
 $("#edit-button").click(function(){

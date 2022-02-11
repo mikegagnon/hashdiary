@@ -18,7 +18,7 @@ import config
 #     return 
 
 def getPageIds():
-    return list(map(lambda x: os.path.splitext(os.path.basename(x))[0], glob.glob(os.path.join(config.MYDIARY, "*.hd.md"))))
+    return list(map(lambda x: os.path.splitext(os.path.splitext(os.path.basename(x))[0])[0], glob.glob(os.path.join(config.MYDIARY, "*.hd.md"))))
 
 def get_saved_pw_hash():
     with open(os.path.expanduser("~/hashdiary-pw.txt"), "r") as f:

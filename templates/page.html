@@ -79,6 +79,12 @@
 </main>
     <script type="text/javascript">
 
+      function hashtagToUrl(hashtag) {
+          return "/page/" + hashtag
+      }
+
+      const POST_SAVE = true;
+
       const CSRF_TOKEN = "{{ csrf_token() }}";
 
       const PAGEID = "{{pageid}}";
