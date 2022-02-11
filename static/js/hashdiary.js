@@ -334,9 +334,7 @@ function removeMarker() {
 
     const span = $(".hd-marker")[0];
 
-    //let span = $(".hd-marker")[0];
-    //console.log(span)
-
+    // https://www.geeksforgeeks.org/how-to-set-cursor-position-in-content-editable-element-using-javascript/
     // document.createRange() creates new range object
     var rangeobj = document.createRange();
 
